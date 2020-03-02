@@ -11,7 +11,7 @@ npm install
 ```
 webpack
 ```
-I use webpack to serve my files, you can use npm run serve but I prefer webpack. Output goes to dist/disclone.html.
+I use webpack to serve my files, you can use npm run serve but I prefer webpack. Output goes to dist/index.html.
 
 ### Compiles and minifies for production
 ```
