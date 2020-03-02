@@ -2,16 +2,18 @@ const webpack = require("webpack");
 const path = require("path");
 
 module.exports = {
-    entry: "./src/main.js",
+    entry: "./src/main.ts",
     module: {
         rules: [
             {
                 test: /\.tsx?$/,
-                use: 'ts-loader',
+                use: [{
+                    loader: 'ts-loader',
+                    options: {
+                        appendTsSuffixTo: [/\.vue$/],
+                    }
+                }],
                 exclude: /node_modules/,
-                options: {
-                    appendTsSuffixTo: [/\.vue$/]
-                }
             },
             {
                 test: /\.vue$/,
@@ -27,7 +29,7 @@ module.exports = {
     },
     output: {
         path: path.resolve(__dirname, 'dist'),
-        filename: 'disclonebundle.js'
+        filename: 'aquiferbundle.js'
     },
     mode: "development",
     watch: true,

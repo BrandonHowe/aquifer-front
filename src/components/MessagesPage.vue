@@ -31,7 +31,7 @@ import MsgPopup from './MessagesPageComponents/MsgPopup.vue';
 
 const isOpen = ws => ws.readyState === ws.OPEN;
 
-const socket = new WebSocket("ws://localhost:6600");
+const socket = new WebSocket("wss://aquifer-social.herokuapp.com");
 // Vue.use(VueNativeSock, "ws://localhost:6600", {
     // reconnection: true
 // })
