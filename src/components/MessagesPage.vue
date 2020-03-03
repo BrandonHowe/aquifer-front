@@ -212,6 +212,7 @@ export default {
     grid-auto-columns: 5%;
     grid-auto-rows: 5%;
     grid-gap: 0px;
+    height: 100%;
     display: grid;
 }
 #servers {
