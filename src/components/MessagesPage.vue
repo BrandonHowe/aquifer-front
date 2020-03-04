@@ -5,11 +5,13 @@
     </div>
     <ChannelList :channels="channels" @changedSelection="changeChannel"></ChannelList>
     <div id="profileArea" v-bind:class="{red: !socketConnected, green: socketConnected}">
-        {{currentUser}}
+        {{currentUser.username}}#{{currentUser.usernum}}
+        <!-- {{userList}} -->
     </div>
     <div id="messages">
-        <Message v-for="message in currentMessages" :key="message.id" :user="message.user" :date="message.date" :message="message.message" @click.native="oneClick(message)"></Message>
+        <message-component v-for="message in currentMessages" :key="message.id" :user="message.user" :date="message.date" :message="message.message" @click.native="oneClick(message)"></message-component>
     </div>
+    <UserList :userList="userList"></UserList>
     <input v-on:keydown.enter="chatmessage" id="sendMessage" type="text" autocomplete="off" />
     <MsgPopup v-if="modalDetails.modalOpen" @closeModal="closeModal" @editMessage="editMessage" @deleteMessage="deleteMessage" :user="modalDetails.user" :date="modalDetails.date" :message="modalDetails.message" :msgId="modalDetails.id"></MsgPopup>
   </div>
@@ -17,6 +19,7 @@
 
 <script>
 /* eslint-disable */
+// import '@types/node';
 import $ from 'jquery';
 import Vue from 'vue';
 import Vuex from 'vuex';
@@ -24,14 +27,18 @@ import moment from 'moment';
 import * as randomWords from "random-words";
 // import VueNativeSock from 'vue-native-websocket';
 
-import Message from './MessagesPageComponents/Message.vue';
+import MessageComponent from './MessagesPageComponents/Message.vue';
 import Channel from './MessagesPageComponents/Channel.vue';
 import ChannelList from './MessagesPageComponents/ChannelList.vue';
 import MsgPopup from './MessagesPageComponents/MsgPopup.vue';
+import UserList from './MessagesPageComponents/UserList.vue';
 
 const isOpen = ws => ws.readyState === ws.OPEN;
 
-const socket = new WebSocket("wss://aquifer-social.herokuapp.com");
+// PRODUCTION
+// const socket = new WebSocket("wss://aquifer-social.herokuapp.com");
+// DEV
+const socket = new WebSocket("ws://localhost:5000");
 // Vue.use(VueNativeSock, "ws://localhost:6600", {
     // reconnection: true
 // })
@@ -39,10 +46,11 @@ const socket = new WebSocket("wss://aquifer-social.herokuapp.com");
 export default {
     name: 'MessagesPage',
     components: {
-        Message,
+        MessageComponent,
         Channel,
         ChannelList,
         MsgPopup,
+        UserList,
     },
     data: () => ({
         moment: moment,
@@ -58,11 +66,15 @@ export default {
             message: null,
             id: null
         },
-        currentUser: "DefaultName",
+        currentUser: {
+            username: "DefaultUser",
+            usernum: 1234,
+            currentChannel: "general",
+        },
+        userList: {},
         editing: false,
         editingId: 0,
         clicks: 0,
-        currentChannel: "general",
         highestId: 0,
         messages: [
             
@@ -74,22 +86,31 @@ export default {
     }),
     computed: {
         currentMessages: function () {
-            return this.messages.filter(message => message.channel === this.currentChannel);
+            return this.messages.filter(message => message.channel === this.currentUser.currentChannel);
         },
+    },
+    created () {
+        window.addEventListener("beforeunload", (event) => {
+            this.closeWebsocket();
+        });
     },
     mounted () {
         this.genName();
+        const self = this;
         socket.onopen = () => {
             this.socketConnected = true;
             socket.send(JSON.stringify(["queryMessages", "query"]));
+            socket.send(JSON.stringify(["newUser", self.currentUser]));
         };
         socket.onclose = () => {
+            socket.send(JSON.stringify(["loseUser", self.currentUser]))
             this.socketConnected = false;
         };
         socket.onmessage = (data) => {
             // console.log(JSON.parse(data.data));
             // console.log(data.data);
             const [category, message] = JSON.parse(data.data);
+            console.log(message);
             if (category === "message") {
                 const messagesElement = document.getElementById("messages");
                 const isScrolledToBottom = messagesElement.scrollTop + messagesElement.clientHeight <= messagesElement.scrollHeight + 1;
@@ -128,6 +149,17 @@ export default {
                     // console.log("NEW 2: " + (newmessagesElement.scrollTop + messagesElement.clientHeight) + "|" + newmessagesElement.scrollHeight);
                 });
             }
+            if (category === "newUser") {
+                // console.log(message);
+                this.userList = message;
+                // console.log(this.userList);
+            }
+            if (category === "loseUser") {
+                this.userList = message;
+            }
+            if (category === "bestowId") {
+                this.currentUser.id = message;
+            }
         }
     },
     methods: {
@@ -142,7 +174,7 @@ export default {
                 const newMessage = {
                     user: this.currentUser,
                     message: message,
-                    channel: this.currentChannel,
+                    channel: this.currentUser.currentChannel,
                 }
                 socket.send(JSON.stringify(["message", newMessage]));
             } else {
@@ -156,13 +188,17 @@ export default {
             }
         },
         changeChannel(currentChannel) {
-            this.currentChannel = currentChannel;
+            this.currentUser.currentChannel = currentChannel;
             // this.currentMessages = [];
             // for (let message of this.messages) {
             //     if (message.channel == this.currentChannel) {
             //         this.currentMessages.push(message);
             //     }
             // }
+        },
+        closeWebsocket() {
+            socket.send(JSON.stringify(["loseUser", this.currentUser]))
+            this.socketConnected = false;
         },
         editMessage(messageId) {
             for (let i in this.messages) {
@@ -201,7 +237,11 @@ export default {
             }
         },
         genName() {
-            this.currentUser = randomWords({exactly: 2, join: "", formatter: (word) => this.capitalizeFLetter(word)}).join("");
+            this.currentUser = {
+                username: randomWords({exactly: 2, join: "", formatter: (word) => this.capitalizeFLetter(word)}).join(""), 
+                usernum: Math.floor(Math.random() * 9000) + 1000
+            };
+            console.log(this.currentUser);
         }
     }
 }
@@ -223,7 +263,7 @@ export default {
 }
 
 #channels {
-    grid-column: 2 / 6;
+    grid-column: 2 / 5;
     grid-row: 1 / 20;
     background: #0f6dbf;
     border: solid black;
@@ -231,7 +271,7 @@ export default {
 }
 
 #profileArea {
-    grid-column: 2 / 6;
+    grid-column: 2 / 5;
     grid-row: 20;
     background-color: #0B3241;
     border: solid black;
@@ -244,7 +284,7 @@ export default {
 #messages {
     /* background: #9AC1EA; */
     background: #B6D9E7;
-    grid-column: 6 / 21;
+    grid-column: 5 / 18;
     grid-row: 1 / 20;
     border: solid black;
     border-width: 0px 0px 2px 0px;
@@ -259,12 +299,24 @@ export default {
 #sendMessage {
     /* grid-column: 2 / 20;
   grid-row: 21; */
-    grid-column: 6 / 21;
+    grid-column: 5 / 18;
     grid-row: 20;
     /* float: left; */
     border: solid black;
     border-width: 0px 0px 0px 0px;
     background: #E4F1F6;
+}
+
+@media only screen and (max-width: 1100px) {
+    #profileArea {
+        grid-column: 2 / 6;
+    }
+    #messages {
+        grid-column: 6 / 18;
+    }
+    #sendMessage {
+        grid-column: 6 / 18;
+    }
 }
 
 #submitForm {

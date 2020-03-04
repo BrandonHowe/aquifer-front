@@ -25,7 +25,7 @@ module.exports = {
         alias: {
             'vue$': 'vue/dist/vue.esm.js',
         },
-        extensions: [ '.tsx', '.ts', '.js' ],
+        extensions: [ '.tsx', '.ts', '.js'],
     },
     output: {
         path: path.resolve(__dirname, 'dist'),

@@ -1,6 +1,6 @@
 <template>
     <div class="message">
-        <p> <span class="message-username">{{user}}</span>  <span class="message-date">{{date}}</span></p>
+        <p> <span class="message-username">{{user.username}}</span>  <span class="message-date">{{date}}</span></p>
         <p class="message-content">{{message}}</p>
     </div>
 </template>
@@ -9,7 +9,7 @@
 export default {
     name: "Message",
     props: {
-        user: String,
+        user: Object,
         date: String,
         message: String
     },

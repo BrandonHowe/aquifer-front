@@ -3,7 +3,7 @@
         <div class="msgpopup-content" @click="clickingMain = true">
             <span class="close" @click="closeModal('x')">&times;</span>
             <div class="msgpopup-header">
-                <p><span class="message-username">{{user}}</span>  <span class="message-date">{{date}}</span></p>
+                <p><span class="message-username">{{user.username}}#{{user.usernum}}</span>  <span class="message-date">{{date}}</span></p>
                 <p class="message-content">{{message}}</p>
                 <p>Message ID: {{msgId}}</p>
             </div>
@@ -21,7 +21,7 @@ import '@coreui/icons';
 export default {
     name: "MsgPopup",
     props: {
-        user: String,
+        user: Object,
         date: String,
         message: String,
         msgId: Number,
