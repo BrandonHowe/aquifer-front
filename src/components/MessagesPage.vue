@@ -7,7 +7,7 @@
                 :channels="channels"
                 @changedSelection="changeChannel"
                 @openChannelModal="openChannelModal"
-                @openNewChannelModal="openChannelModal('newChannel')"
+                @openNewChannelModal="openNewChannelModal"
         ></ChannelList>
         <div id="profileArea"
              v-bind:class="{
@@ -53,6 +53,7 @@
         <ChannelPopup
             v-if="channelModalDetails.modalOpen"
             @closeModal="closeModal('channel')"
+            @deleteChannel="deleteChannel"
             :channel="channelModalDetails.selectedChannel"
         ></ChannelPopup>
     </div>
@@ -212,6 +213,9 @@
                 if (category === "newChannel") {
                     this.channels = message;
                 }
+                if (category === "deleteChannel") {
+                    this.channels = message;
+                }
             }
         },
         methods: {
@@ -258,6 +262,9 @@
                     }
                 }
             },
+            deleteChannel(channelId) {
+                socket.send(JSON.stringify(["deleteChannel", channelId]));
+            },
             deleteMessage(messageId) {
                 socket.send(JSON.stringify(["deleteMessage", messageId]));
             },
@@ -272,7 +279,7 @@
                     this.channelModalDetails.modalOpen = false;
                 }
             },
-            openNewChannelModal(data) {
+            openNewChannelModal() {
                 this.newChannelModalDetails.modalOpen = true;
             },
             openChannelModal(data) {

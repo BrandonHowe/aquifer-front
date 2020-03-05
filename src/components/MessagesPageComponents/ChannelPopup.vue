@@ -30,6 +30,7 @@
         methods: {
             deleteChannel () {
                 this.$emit("deleteChannel", this.channel.id);
+                this.$emit("closeModal");
             },
             closeModal(type) {
                 if (this.clickingMain === false || type === "x") {
