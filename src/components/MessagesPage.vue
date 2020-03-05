@@ -6,7 +6,7 @@
         <ChannelList
                 :channels="channels"
                 @changedSelection="changeChannel"
-                @openChannelModal="openModal('channel')"
+                @openNewChannelModal="openModal('channel')"
         ></ChannelList>
         <div id="profileArea"
              v-bind:class="{
@@ -46,9 +46,13 @@
                 :msgId="msgModalDetails.id"
         ></MsgPopup>
         <NewChannelPopup
+            v-if="newChannelModalDetails.modalOpen"
+            @closeModal="closeModal('newChannel')"
+        ></NewChannelPopup>
+        <ChannelPopup
             v-if="channelModalDetails.modalOpen"
             @closeModal="closeModal('channel')"
-        ></NewChannelPopup>
+        ></ChannelPopup>
     </div>
 </template>
 
@@ -68,6 +72,7 @@
     import MsgPopup from './MessagesPageComponents/MsgPopup.vue';
     import NewChannelPopup from './MessagesPageComponents/NewChannelPopup.vue';
     import UserList from './MessagesPageComponents/UserList.vue';
+    import ChannelPopup from "./MessagesPageComponents/ChannelPopup.vue";
 
     const isOpen = ws => ws.readyState === ws.OPEN;
 
@@ -82,6 +87,7 @@
     export default {
         name: 'MessagesPage',
         components: {
+            ChannelPopup,
             MessageComponent,
             Channel,
             ChannelList,
@@ -99,8 +105,12 @@
                 message: null,
                 id: null
             },
-            channelModalDetails: {
+            newChannelModalDetails: {
                 modalOpen: false,
+            },
+            channelModalDetails {
+                modalOpen: false,
+                selectedChannel: null
             },
             currentUser: {
                 username: "DefaultUser",
@@ -265,13 +275,16 @@
                 if (whichOne === "msg") {
                     this.msgModalDetails.modalOpen = false;
                 }
+                if (whichOne === "newChannel") {
+                    this.newChannelModalDetails.modalOpen = false;
+                }
                 if (whichOne === "channel") {
                     this.channelModalDetails.modalOpen = false;
                 }
             },
             openModal(whichOne) {
-                if (whichOne === "channel") {
-                    this.channelModalDetails.modalOpen = true;
+                if (whichOne === "newChannel") {
+                    this.newChannelModalDetails.modalOpen = true;
                 }
             },
             oneClick(message) {

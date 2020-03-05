@@ -39,7 +39,7 @@ export default {
             // console.log(channelName);
         },
         newChannel () {
-            this.$emit("openChannelModal");
+            this.$emit("openNewChannelModal");
             // socket.send(JSON.stringify(["newChannel", {name: "blah"}]))
         }
     }
