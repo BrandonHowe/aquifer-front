@@ -4,8 +4,8 @@ const path = require("path");
 
 module.exports = merge(baseConfig, {
     output: {
-        path: path.resolve(__dirname, 'dist'),
-        filename: 'aquifer.bundle.dev.js'
+        path: path.resolve(__dirname, 'dev'),
+        filename: 'aquifer.bundle.dist.js'
     },
     mode: "development",
     watch: true,

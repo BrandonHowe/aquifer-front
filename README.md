@@ -7,22 +7,23 @@ This is the front end of my disclone. It's a clone of discord that I'm making to
 npm install
 ```
 
-### Compiles and hot-reloads for development
+### Compiles for development
 ```
-webpack
+npm run dev
 ```
-I use webpack to serve my files, you can use npm run serve but I prefer webpack. Output goes to dist/index.html.
+I use webpack to serve my files, you can use `npm run serve` but I prefer webpack. Output goes to `dist/aquifer.bundle.dev.js`. You can see the file at `dist/index.html`.
 
 ### Compiles and minifies for production
 ```
-npm run build
+npm run prod
 ```
-Again, I use webpack, so this is kind of unnecessary.
+Again, I use webpack, so the Vue `npm run build` is unnecessary. Output goes to `production/aquifer.bundle.prod.js`. You can see the file at `production/index.html`.
 
 ### Run your tests
 ```
 npm run test
 ```
+I don't use tests, at least not in this small-scale of a project. I might add them later, but not now.
 
 ### Lints and fixes files
 ```
