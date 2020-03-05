@@ -6,7 +6,8 @@
         <ChannelList
                 :channels="channels"
                 @changedSelection="changeChannel"
-                @openNewChannelModal="openModal('channel')"
+                @openChannelModal="openModal('channel', channel)"
+                @openNewChannelModal="openModal('newChannel', null)"
         ></ChannelList>
         <div id="profileArea"
              v-bind:class="{
@@ -282,9 +283,13 @@
                     this.channelModalDetails.modalOpen = false;
                 }
             },
-            openModal(whichOne) {
+            openModal(whichOne, data) {
                 if (whichOne === "newChannel") {
                     this.newChannelModalDetails.modalOpen = true;
+                }
+                if (whichOne === "channel") {
+                    this.channelModalDetails.selectedChannel = data;
+                    this.channelModalDetails.modalOpen = true;
                 }
             },
             oneClick(message) {

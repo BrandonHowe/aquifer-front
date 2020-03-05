@@ -1,6 +1,6 @@
 <template>
     <div class="channelList">
-        <Channel v-for="channel in channels" :key="channel.id" :channelName="channel.name" v-on:click.native="changeSelection(channel.id)" v-bind:class="{coloredBackground: channel.id === currentlySelected, channelHover: channel.id !== currentlySelected}"></Channel>
+        <Channel v-for="channel in channels" :key="channel.id" :channelName="channel.name" v-on:click.native="oneClick()" v-bind:class="{coloredBackground: channel.id === currentlySelected, channelHover: channel.id !== currentlySelected}"></Channel>
         <div id="newChannel" @click="newChannel">
             New Channel
         </div>
@@ -25,6 +25,7 @@ export default {
     data() {
         return {
             currentlySelected: null,
+            clicks: 0,
         }
     },
     props: {
@@ -37,6 +38,23 @@ export default {
             this.$emit("changedSelection", channelId);
             socket.send(JSON.stringify(["changedSelection", channelId]));
             // console.log(channelName);
+        },
+        oneClick() {
+            this.changeSelection(this.currentlySelected);
+            // console.log(message);
+            this.clicks++;
+            if(this.clicks === 1) {
+                let self = this;
+                this.timer = setTimeout(function() {
+                    self.clicks = 0
+                }, 700);
+            } else {
+                clearTimeout(this.timer);
+                const selectedChannel = this.channels[this.currentlySelected];
+                this.$emit("openChannelModal", selectedChannel);
+                // console.log(this.modalDetails);
+                this.clicks = 0;
+            }
         },
         newChannel () {
             this.$emit("openNewChannelModal");
