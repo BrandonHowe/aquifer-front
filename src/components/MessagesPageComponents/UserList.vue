@@ -1,5 +1,5 @@
 <template>
-    <div class="userlist">
+    <div class="userList">
         <User v-for="user in userList" :key="user.id" :user="user"></User>
     </div>
 </template>
@@ -18,11 +18,11 @@ export default {
 }
 </script>
 
-<style>
-.userlist {
+<style scoped>
+.userList {
     background: #67AFCB;
     border: solid black;
-    border-width: 0px 0px 2px 2px;
+    border-width: 0 0 2px 2px;
     grid-column: 18 / 21;
     grid-row: 1 / 21;
 }

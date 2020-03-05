@@ -1,6 +1,9 @@
 <template>
     <div class="channelList">
-        <Channel v-for="channel in channels" :key="channel" :channelName="channel" v-on:click.native="changeSelection(channel)" v-bind:class="{coloredBackground: channel == currentlySelected, channelHover: channel != currentlySelected}"></Channel>
+        <Channel v-for="channel in channels" :key="channel.id" :channelName="channel.name" v-on:click.native="changeSelection(channel.id)" v-bind:class="{coloredBackground: channel.id == currentlySelected, channelHover: channel.id != currentlySelected}"></Channel>
+        <div id="newChannel" @click="newChannel">
+            New Channel
+        </div>
     </div>
 </template>
 
@@ -21,18 +24,23 @@ export default {
     },
     data() {
         return {
-            currentlySelected: "general",
+            currentlySelected: null,
         }
     },
     props: {
-        channels: Array
+        channels: Object
     },
     methods: {
-        changeSelection (channelName) {
-            this.currentlySelected = channelName;
-            this.$emit("changedSelection", channelName);
-            socket.send(JSON.stringify(["changedSelection", channelName]));
+        changeSelection (channelId) {
+            this.currentlySelected = channelId;
+            console.log("New channel: " + channelId);
+            this.$emit("changedSelection", channelId);
+            socket.send(JSON.stringify(["changedSelection", channelId]));
             // console.log(channelName);
+        },
+        newChannel () {
+            this.$emit("openChannelModal");
+            // socket.send(JSON.stringify(["newChannel", {name: "blah"}]))
         }
     }
 }
@@ -45,7 +53,7 @@ export default {
         /* background: #4B6D93; */
         background-color: #67AFCB;
         border: solid black;
-        border-width: 0px 2px 2px 2px;
+        border-width: 0 2px 2px 2px;
     }
     @media only screen and (max-width: 1100px) {
         .channelList {

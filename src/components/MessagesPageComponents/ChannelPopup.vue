@@ -1,0 +1,111 @@
+<template>
+    <div class="channelPopup" id="channelPopup" @click="closeModal('reg')">
+        <div class="channelPopup-content" @click="clickingMain = true">
+            <span class="close" @click="closeModal('x')">&times;</span>
+            <div class="channelPopup-header">
+                <h3>Create a new channel</h3>
+            </div>
+            <div class="channelPopup-actions">
+                <input
+                    v-model="channelName"
+                    class="channelPopupInput"
+                />
+                <div
+                    @click="createChannel()"
+                    class="channelPopupCreate"
+                >Create!</div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+    import '@coreui/icons';
+
+    const socket = new WebSocket("ws://localhost:5000");
+
+    export default {
+        name: "ChannelPopup",
+        data: () => ({
+            clickingMain: false,
+            channelName: "",
+        }),
+        methods: {
+            createChannel() {
+                socket.send(JSON.stringify(["newChannel", {name: this.channelName}]));
+                this.clickingMain = false;
+                this.$emit("closeModal");
+            },
+            closeModal(type) {
+                if (this.clickingMain === false || type === "x") {
+                    this.clickingMain = false;
+                    this.$emit("closeModal");
+                }
+            }
+        }
+    }
+</script>
+
+<style scoped>
+    .channelPopup {
+        /* display: none; */
+        /* Hidden by default */
+        position: fixed;
+        /* Stay in place */
+        z-index: 2;
+        /* Sit on top */
+        left: 0;
+        top: 0;
+        width: 100%;
+        /* Full width */
+        height: 100vh;
+        /* Full height */
+        overflow: auto;
+        /* Enable scroll if needed */
+        background-color: rgb(0,0,0);
+        /* Fallback color */
+        background-color: rgba(0, 0, 0, 0.7);
+        text-align: left;
+        color: #0B3241;
+        /* Black w/ opacity */
+    }
+    .channelPopup-content {
+        background-color: #6B9BAE;
+        margin: 10% auto;
+        /* 15% from the top and centered */
+        height: 60%;
+        padding: 20px;
+        border: 1px solid #264F5F;
+        width: 80%;
+        /* Could be more or less, depending on screen size */
+    }
+    .close {
+        color: #0B3241;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+    .close:hover,
+    .close:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+    }
+    .channelPopupInput {
+        background-color: #B6D9E7;
+        width: 80%;
+        padding: 1% 5% 1% 5%;
+        margin-left: 5%;
+        height: 25px;
+    }
+    .channelPopupCreate {
+        width: calc(20% - 10px);
+        height: 40px;
+        padding: 5px;
+        margin-top: 10px;
+        margin-left: calc(40% - 5px);
+        text-align: center;
+        background-color: #B6D9E7;
+    }
+</style>

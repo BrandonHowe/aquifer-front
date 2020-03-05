@@ -32,12 +32,12 @@ export default {
     methods: {
         editMessage() {
             this.$emit("editMessage", this.msgId);
-            this.$emit("closeModal");
+            this.$emit("closeMsgModal");
             this.clickingMain = false;
         },
         deleteMessage() {
             this.$emit("deleteMessage", this.msgId);
-            this.$emit("closeModal");
+            this.$emit("closeMsgModal");
             this.clickingMain = false;
         },
         closeModal(type) {
