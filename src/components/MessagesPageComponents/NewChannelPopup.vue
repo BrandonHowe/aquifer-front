@@ -102,6 +102,7 @@
     .newChannelPopupCreate {
         width: calc(20% - 10px);
         height: 40px;
+        line-height: 40px;
         padding: 5px;
         margin-top: 10px;
         margin-left: calc(40% - 5px);
