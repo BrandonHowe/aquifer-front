@@ -45,10 +45,10 @@
                 :message="msgModalDetails.message"
                 :msgId="msgModalDetails.id"
         ></MsgPopup>
-        <ChannelPopup
+        <NewChannelPopup
             v-if="channelModalDetails.modalOpen"
             @closeModal="closeModal('channel')"
-        ></ChannelPopup>
+        ></NewChannelPopup>
     </div>
 </template>
 
@@ -66,7 +66,7 @@
     import Channel from './MessagesPageComponents/Channel.vue';
     import ChannelList from './MessagesPageComponents/ChannelList.vue';
     import MsgPopup from './MessagesPageComponents/MsgPopup.vue';
-    import ChannelPopup from './MessagesPageComponents/ChannelPopup.vue';
+    import NewChannelPopup from './MessagesPageComponents/NewChannelPopup.vue';
     import UserList from './MessagesPageComponents/UserList.vue';
 
     const isOpen = ws => ws.readyState === ws.OPEN;
@@ -87,7 +87,7 @@
             ChannelList,
             MsgPopup,
             UserList,
-            ChannelPopup,
+            NewChannelPopup,
         },
         data: () => ({
             moment: moment,
@@ -207,13 +207,13 @@
                 // this.messages = this.messages;
                 // console.log("We checkin da messages");
                 // console.log(this.messages.filter(message => message.channel == this.currentUser.currentChannel));
-                return this.messages.filter(message => message.channel == this.currentUser.currentChannel);
+                return this.messages.filter(message => message.channel === this.currentUser.currentChannel);
             },
             capitalizeFLetter(string) {
                 return string.replace(/^./, string[0].toUpperCase());
             },
             chatmessage() {
-                if (this.editing == false) {
+                if (this.editing === false) {
                     // Send the "pingServer" event to the server.
                     const message = $("#sendMessage").val();
                     $("#sendMessage").val("");
@@ -246,12 +246,12 @@
                 // }
             },
             closeWebsocket() {
-                socket.send(JSON.stringify(["loseUser", this.currentUser]))
+                socket.send(JSON.stringify(["loseUser", this.currentUser]));
                 this.socketConnected = false;
             },
             editMessage(messageId) {
                 for (let i in this.messages) {
-                    if (this.messages[i].id == messageId) {
+                    if (this.messages[i].id === messageId) {
                         $("#sendMessage").val(this.messages[i].message);
                         this.editing = true;
                         this.editingId = messageId;
@@ -290,7 +290,7 @@
                         date: message.date,
                         message: message.message,
                         id: message.id,
-                    }
+                    };
                     // console.log(this.modalDetails);
                     this.clicks = 0;
                 }
@@ -321,13 +321,13 @@
         background-color: #347B98;
     }
 
-    #channels {
-        grid-column: 2 / 5;
-        grid-row: 1 / 20;
-        background: #0f6dbf;
-        border: solid black;
-        border-width: 0 2px 2px 2px;
-    }
+    /*#channels {*/
+    /*    grid-column: 2 / 5;*/
+    /*    grid-row: 1 / 20;*/
+    /*    background: #0f6dbf;*/
+    /*    border: solid black;*/
+    /*    border-width: 0 2px 2px 2px;*/
+    /*}*/
 
     #profileArea {
         grid-column: 2 / 5;
@@ -350,10 +350,10 @@
         overflow: auto;
     }
 
-    #msgForm {
-        grid-column: 6 / 21;
-        grid-row: 20;
-    }
+    /*#msgForm {*/
+    /*    grid-column: 6 / 21;*/
+    /*    grid-row: 20;*/
+    /*}*/
 
     #sendMessage {
         /* grid-column: 2 / 20;
@@ -378,15 +378,15 @@
         }
     }
 
-    #submitForm {
-        display: none;
-    }
+    /*#submitForm {*/
+    /*    display: none;*/
+    /*}*/
 
-    .red {
-        background-color: red;
-    }
+    /*.red {*/
+    /*    background-color: red;*/
+    /*}*/
 
-    .green {
-        background-color: green;
-    }
+    /*.green {*/
+    /*    background-color: green;*/
+    /*}*/
 </style>

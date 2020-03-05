@@ -1,6 +1,6 @@
 <template>
     <div class="channelList">
-        <Channel v-for="channel in channels" :key="channel.id" :channelName="channel.name" v-on:click.native="changeSelection(channel.id)" v-bind:class="{coloredBackground: channel.id == currentlySelected, channelHover: channel.id != currentlySelected}"></Channel>
+        <Channel v-for="channel in channels" :key="channel.id" :channelName="channel.name" v-on:click.native="changeSelection(channel.id)" v-bind:class="{coloredBackground: channel.id === currentlySelected, channelHover: channel.id !== currentlySelected}"></Channel>
         <div id="newChannel" @click="newChannel">
             New Channel
         </div>
@@ -60,13 +60,13 @@ export default {
             grid-column: 2 / 6;
         }
     }
-    .channelHover {
-        transition: background-color 0.1s;
-    }
-    .channelHover:hover {
-        background-color: #459DBF;
-    }
-    .coloredBackground {
-        background-color: #3B8BAB;
-    }
+    /*.channelHover {*/
+    /*    transition: background-color 0.1s;*/
+    /*}*/
+    /*.channelHover:hover {*/
+    /*    background-color: #459DBF;*/
+    /*}*/
+    /*.coloredBackground {*/
+    /*    background-color: #3B8BAB;*/
+    /*}*/
 </style>

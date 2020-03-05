@@ -1,14 +1,19 @@
 <template>
-    <div class="channelPopup" id="channelPopup" @click="closeModal('reg')">
-        <div class="channelPopup-content" @click="clickingMain = true">
+    <div class="newChannelPopup" id="newChannelPopup" @click="closeModal('reg')">
+        <div class="newChannelPopup-content" @click="clickingMain = true">
             <span class="close" @click="closeModal('x')">&times;</span>
-            <div class="channelPopup-header">
-                <h3>Channel options</h3>
-                <p>Channel name: {{channel.name}}</p>
-                <p>Channel id: {{channel.id}}</p>
+            <div class="newChannelPopup-header">
+                <h3>Create a new channel</h3>
             </div>
-            <div class="channelPopup-actions">
-                <p class="channelPopup-action" @click="deleteChannel">Delete channel</p>
+            <div class="newChannelPopup-actions">
+                <input
+                    v-model="channelName"
+                    class="newChannelPopupInput"
+                />
+                <div
+                    @click="createChannel()"
+                    class="newChannelPopupCreate"
+                >Create!</div>
             </div>
         </div>
     </div>
@@ -17,19 +22,19 @@
 <script>
     import '@coreui/icons';
 
-    // const socket = new WebSocket("ws://localhost:5000");
+    const socket = new WebSocket("ws://localhost:5000");
 
     export default {
-        name: "ChannelPopup",
-        props: {
-            channel: Object
-        },
+        name: "NewChannelPopup",
         data: () => ({
             clickingMain: false,
+            channelName: "",
         }),
         methods: {
-            deleteChannel () {
-                this.$emit("deleteChannel", this.channel.id);
+            createChannel() {
+                socket.send(JSON.stringify(["newChannel", {name: this.channelName}]));
+                this.clickingMain = false;
+                this.$emit("closeModal");
             },
             closeModal(type) {
                 if (this.clickingMain === false || type === "x") {
@@ -42,7 +47,7 @@
 </script>
 
 <style scoped>
-    .channelPopup {
+    .newChannelPopup {
         /* display: none; */
         /* Hidden by default */
         position: fixed;
@@ -64,7 +69,7 @@
         color: #0B3241;
         /* Black w/ opacity */
     }
-    .channelPopup-content {
+    .newChannelPopup-content {
         background-color: #6B9BAE;
         margin: 10% auto;
         /* 15% from the top and centered */
@@ -87,9 +92,20 @@
         text-decoration: none;
         cursor: pointer;
     }
-    .channelPopup-action:hover {
-         background-color: #78A4B5;
-         margin: -10px;
-         padding: 10px;
-     }
+    .newChannelPopupInput {
+        background-color: #B6D9E7;
+        width: 80%;
+        padding: 1% 5% 1% 5%;
+        margin-left: 5%;
+        height: 25px;
+    }
+    .newChannelPopupCreate {
+        width: calc(20% - 10px);
+        height: 40px;
+        padding: 5px;
+        margin-top: 10px;
+        margin-left: calc(40% - 5px);
+        text-align: center;
+        background-color: #B6D9E7;
+    }
 </style>
