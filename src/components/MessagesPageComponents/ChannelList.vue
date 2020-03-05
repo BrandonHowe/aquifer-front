@@ -46,10 +46,9 @@ export default {
             this.changeSelection(newChannelId);
             // console.log(this.clicks);
             this.clicks.num++;
-            this.clicks.channel = newChannelId;
             if(this.clicks.num === 1) {
                 let self = this;
-                console.log(self.clicks);
+                this.clicks.channel = newChannelId;
                 this.timer = setTimeout(function() {
                     self.clicks.num = 0
                 }, 700);
