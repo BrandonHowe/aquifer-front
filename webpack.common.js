@@ -1,6 +1,3 @@
-const webpack = require("webpack");
-const path = require("path");
-
 module.exports = {
     entry: "./src/main.ts",
     module: {
@@ -27,10 +24,4 @@ module.exports = {
         },
         extensions: [ '.tsx', '.ts', '.js'],
     },
-    output: {
-        path: path.resolve(__dirname, 'dist'),
-        filename: 'aquiferbundle.js'
-    },
-    mode: "development",
-    watch: true,
-}
+};
