@@ -6,8 +6,8 @@
         <ChannelList
                 :channels="channels"
                 @changedSelection="changeChannel"
-                @openChannelModal="openModal('channel', channel)"
-                @openNewChannelModal="openModal('newChannel', null)"
+                @openChannelModal="openChannelModal"
+                @openNewChannelModal="openChannelModal('newChannel')"
         ></ChannelList>
         <div id="profileArea"
              v-bind:class="{
@@ -53,6 +53,7 @@
         <ChannelPopup
             v-if="channelModalDetails.modalOpen"
             @closeModal="closeModal('channel')"
+            :channel="channelModalDetails.selectedChannel"
         ></ChannelPopup>
     </div>
 </template>
@@ -109,9 +110,9 @@
             newChannelModalDetails: {
                 modalOpen: false,
             },
-            channelModalDetails {
+            channelModalDetails: {
                 modalOpen: false,
-                selectedChannel: null
+                selectedChannel: {}
             },
             currentUser: {
                 username: "DefaultUser",
@@ -215,9 +216,6 @@
         },
         methods: {
             currentMessages() {
-                // this.messages = this.messages;
-                // console.log("We checkin da messages");
-                // console.log(this.messages.filter(message => message.channel == this.currentUser.currentChannel));
                 return this.messages.filter(message => message.channel === this.currentUser.currentChannel);
             },
             capitalizeFLetter(string) {
@@ -245,16 +243,7 @@
                 }
             },
             changeChannel(currentChannel) {
-                // this.currentUser.currentChannel = currentChannel;
                 Vue.set(this.currentUser, "currentChannel", currentChannel);
-                // console.log("channel changed: " + this.currentUser.currentChannel);
-                // console.log(this.messages.filter(message => message.channel == this.currentUser.currentChannel))
-                // this.currentMessages = [];
-                // for (let message of this.messages) {
-                //     if (message.channel == this.currentChannel) {
-                //         this.currentMessages.push(message);
-                //     }
-                // }
             },
             closeWebsocket() {
                 socket.send(JSON.stringify(["loseUser", this.currentUser]));
@@ -283,17 +272,15 @@
                     this.channelModalDetails.modalOpen = false;
                 }
             },
-            openModal(whichOne, data) {
-                if (whichOne === "newChannel") {
-                    this.newChannelModalDetails.modalOpen = true;
-                }
-                if (whichOne === "channel") {
-                    this.channelModalDetails.selectedChannel = data;
-                    this.channelModalDetails.modalOpen = true;
-                }
+            openNewChannelModal(data) {
+                this.newChannelModalDetails.modalOpen = true;
+            },
+            openChannelModal(data) {
+                console.log(data);
+                this.channelModalDetails.selectedChannel = data;
+                this.channelModalDetails.modalOpen = true;
             },
             oneClick(message) {
-                // console.log(message);
                 this.clicks++;
                 if(this.clicks === 1) {
                     let self = this;
@@ -309,7 +296,6 @@
                         message: message.message,
                         id: message.id,
                     };
-                    // console.log(this.modalDetails);
                     this.clicks = 0;
                 }
             },
@@ -318,7 +304,6 @@
                     username: randomWords({exactly: 2, join: "", formatter: (word) => this.capitalizeFLetter(word)}).join(""),
                     userNum: Math.floor(Math.random() * 9000) + 1000
                 };
-                // console.log(this.currentUser);
             }
         }
     }

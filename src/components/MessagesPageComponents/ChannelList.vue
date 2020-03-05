@@ -1,6 +1,6 @@
 <template>
     <div class="channelList">
-        <Channel v-for="channel in channels" :key="channel.id" :channelName="channel.name" v-on:click.native="oneClick()" v-bind:class="{coloredBackground: channel.id === currentlySelected, channelHover: channel.id !== currentlySelected}"></Channel>
+        <Channel v-for="channel in channels" :key="channel.id" :channelName="channel.name" v-on:click.native="oneClick(channel.id)" v-bind:class="{coloredBackground: channel.id === currentlySelected, channelHover: channel.id !== currentlySelected}"></Channel>
         <div id="newChannel" @click="newChannel">
             New Channel
         </div>
@@ -24,8 +24,11 @@ export default {
     },
     data() {
         return {
-            currentlySelected: null,
-            clicks: 0,
+            currentlySelected: 0,
+            clicks: {
+                num: 0,
+                channel: 0,
+            }
         }
     },
     props: {
@@ -39,21 +42,25 @@ export default {
             socket.send(JSON.stringify(["changedSelection", channelId]));
             // console.log(channelName);
         },
-        oneClick() {
-            this.changeSelection(this.currentlySelected);
-            // console.log(message);
-            this.clicks++;
-            if(this.clicks === 1) {
+        oneClick(newChannelId) {
+            this.changeSelection(newChannelId);
+            // console.log(this.clicks);
+            this.clicks.num++;
+            this.clicks.channel = newChannelId;
+            if(this.clicks.num === 1) {
                 let self = this;
+                console.log(self.clicks);
                 this.timer = setTimeout(function() {
-                    self.clicks = 0
+                    self.clicks.num = 0
                 }, 700);
             } else {
-                clearTimeout(this.timer);
-                const selectedChannel = this.channels[this.currentlySelected];
-                this.$emit("openChannelModal", selectedChannel);
-                // console.log(this.modalDetails);
-                this.clicks = 0;
+                if (newChannelId === this.clicks.channel) {
+                    clearTimeout(this.timer);
+                    const selectedChannel = this.channels[this.currentlySelected];
+                    this.$emit("openChannelModal", selectedChannel);
+                    // console.log(this.modalDetails);
+                    this.clicks.num = 0;
+                }
             }
         },
         newChannel () {
@@ -78,13 +85,13 @@ export default {
             grid-column: 2 / 6;
         }
     }
-    /*.channelHover {*/
-    /*    transition: background-color 0.1s;*/
-    /*}*/
-    /*.channelHover:hover {*/
-    /*    background-color: #459DBF;*/
-    /*}*/
-    /*.coloredBackground {*/
-    /*    background-color: #3B8BAB;*/
-    /*}*/
+    .channelHover {
+        transition: background-color 0.1s;
+    }
+    .channelHover:hover {
+        background-color: #459DBF;
+    }
+    .coloredBackground {
+        background-color: #3B8BAB;
+    }
 </style>
