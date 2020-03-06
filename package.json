@@ -16,15 +16,10 @@
     "moment": "^2.24.0",
     "path": "^0.12.7",
     "random-words": "^1.1.0",
-    "socket.io-client": "^2.3.0",
     "vue": "^2.6.11",
-    "vue-native-websocket": "^2.0.14",
-    "vue-route": "^1.5.1",
     "vue-router": "^3.1.6",
     "vue-socket.io": "^3.0.7",
-    "vuex": "^3.1.2",
-    "webpack": "^4.41.6",
-    "ws": "^7.2.1"
+    "webpack": "^4.41.6"
   },
   "devDependencies": {
     "@types/node": "^13.7.7",
