@@ -63,8 +63,6 @@
     /* eslint-disable */
     // import '@types/node';
 
-    //TODO: add double click functionality for messages
-
     import Vue from 'vue';
     import moment from 'moment';
     import * as randomWords from "random-words";
@@ -83,9 +81,6 @@
     // const socket = new WebSocket("wss://aquifer-social.herokuapp.com");
     // DEV
     const socket = new WebSocket("ws://localhost:5000");
-    // Vue.use(VueNativeSock, "ws://localhost:6600", {
-    // reconnection: true
-    // })
 
     export default {
         name: 'MessagesPage',
@@ -149,7 +144,6 @@
                 socket.send(JSON.stringify(["queryMessages", "query"]));
                 socket.send(JSON.stringify(["queryChannels", "query"]));
                 socket.send(JSON.stringify(["newUser", self.currentUser]));
-                // console.log(this.messages);
             };
             socket.onclose = () => {
                 socket.send(JSON.stringify(["loseUser", self.currentUser]));
@@ -157,19 +151,15 @@
             };
             socket.onmessage = (data) => {
                 const [category, message] = JSON.parse(data.data);
-                // console.log(message);
                 if (category === "message") {
                     const messagesElement = document.getElementById("messages");
                     const isScrolledToBottom = messagesElement.scrollTop + messagesElement.clientHeight <= messagesElement.scrollHeight + 1;
                     socket.send(JSON.stringify(["queryMessages", "query"]));
-                    // console.log((messagesElement.scrollTop + messagesElement.clientHeight) + "|" + messagesElement.scrollHeight);
                     setImmediate(() => {
                         const newmessagesElement = document.getElementById("messages");
-                        // console.log("NEW: " + newmessagesElement.scrollTop + "|" + newmessagesElement.scrollHeight);
                         if (isScrolledToBottom) {
                             newmessagesElement.scrollTop = newmessagesElement.scrollHeight + newmessagesElement.clientHeight;
                         }
-                        // console.log("NEW 2: " + (newmessagesElement.scrollTop + messagesElement.clientHeight) + "|" + newmessagesElement.scrollHeight);
                     });
                 }
                 if (category === "editMessage") {
@@ -184,25 +174,20 @@
                 }
                 if (category === "messageList") {
                     this.messages = message;
-                    // this.highestId = message.length;
                     const messagesElement = document.getElementById("messages");
                     const isScrolledToBottom = messagesElement.scrollTop + messagesElement.clientHeight <= messagesElement.scrollHeight + 1;
                     setImmediate(() => {
                         const newmessagesElement = document.getElementById("messages");
-                        // console.log("NEW: " + newmessagesElement.scrollTop + "|" + newmessagesElement.scrollHeight);
                         if (isScrolledToBottom) {
                             newmessagesElement.scrollTop = newmessagesElement.scrollHeight + newmessagesElement.clientHeight;
                         }
-                        // console.log("NEW 2: " + (newmessagesElement.scrollTop + messagesElement.clientHeight) + "|" + newmessagesElement.scrollHeight);
                     });
                 }
                 if (category === "channelList") {
                     this.channels = message;
                 }
                 if (category === "newUser") {
-                    // console.log(message);
                     this.userList = message;
-                    // console.log(this.userList);
                 }
                 if (category === "loseUser") {
                     this.userList = message;
@@ -270,6 +255,7 @@
             },
             closeModal(whichOne) {
                 if (whichOne === "msg") {
+                    console.log("close");
                     this.msgModalDetails.modalOpen = false;
                 }
                 if (whichOne === "newChannel") {
@@ -295,10 +281,14 @@
                         self.clicks = 0
                     }, 700);
                 } else{
+                    console.log("Double click successful");
                     clearTimeout(this.timer);
-                    this.modalDetails = {
+                    this.msgModalDetails = {
                         modalOpen: true,
-                        user: message.user,
+                        user: {
+                            username: message.user.username,
+                            usernum: message.user.userNum,
+                        },
                         date: message.date,
                         message: message.message,
                         id: message.id,

@@ -43,7 +43,7 @@ export default {
         closeModal(type) {
             if (this.clickingMain === false || type === "x") {
                 this.clickingMain = false;
-                this.$emit("closeModal");
+                this.$emit("closeMsgModal");
             }
         }
     }
