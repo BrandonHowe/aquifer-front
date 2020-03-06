@@ -9,6 +9,7 @@
 
 <script>
 import Channel from './Channel.vue';
+import '../../assets/colorVars.css';
 
 // const isOpen = ws => ws.readyState === ws.OPEN;
 
@@ -75,7 +76,7 @@ export default {
         grid-column: 2 / 5;
         grid-row: 1 / 20;
         /* background: #4B6D93; */
-        background-color: #67AFCB;
+        background-color: var(--aquifer-medium-1);
         border: solid black;
         border-width: 0 2px 2px 2px;
     }
@@ -88,9 +89,9 @@ export default {
         transition: background-color 0.1s;
     }
     .channelHover:hover {
-        background-color: #459DBF;
+        background-color: var(--aquifer-medium-2);
     }
     .coloredBackground {
-        background-color: #3B8BAB;
+        background-color: var(--aquifer-medium-3);
     }
 </style>

@@ -6,6 +6,7 @@
 
 <script>
 import User from './User.vue';
+import '../../assets/colorVars.css';
 
 export default {
     name: "UserList",
@@ -20,7 +21,7 @@ export default {
 
 <style scoped>
 .userList {
-    background: #67AFCB;
+    background: var(--aquifer-medium-1);
     border: solid black;
     border-width: 0 0 2px 2px;
     grid-column: 18 / 21;

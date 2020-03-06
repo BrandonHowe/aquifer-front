@@ -6,6 +6,7 @@
 </template>
 
 <script>
+    import '../../assets/colorVars.css';
 export default {
     name: "Message",
     props: {
@@ -22,13 +23,13 @@ export default {
 <style scoped>
     .message {
         width: 94%;
-        background-color: #459DBF;
+        background-color: var(--aquifer-medium-2);
         /* height: 50px; */
         text-align: left;
         padding: 10px 3% 10px 3%;
     }
     .message:hover {
-        background-color: #3782A0;
+        background-color: var(--aquifer-dark-1);
     }
     .message-username {
         color: darkred;
@@ -36,7 +37,7 @@ export default {
     }
     .message-date {
         font-size: 10px;
-        color: #0B3241;
+        color: var(--aquifer-text-dark-2);
     }
     .message-content {
         color: #ccc;

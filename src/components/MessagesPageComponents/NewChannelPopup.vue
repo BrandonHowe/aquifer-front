@@ -21,6 +21,7 @@
 
 <script>
     import '@coreui/icons';
+    import '../../assets/colorVars.css';
 
     const socket = new WebSocket("ws://localhost:5000");
 
@@ -70,7 +71,7 @@
         /* Black w/ opacity */
     }
     .newChannelPopup-content {
-        background-color: #6B9BAE;
+        background-color: var(--aquifer-medium-4);
         margin: 10% auto;
         /* 15% from the top and centered */
         height: 60%;
@@ -80,7 +81,7 @@
         /* Could be more or less, depending on screen size */
     }
     .close {
-        color: #0B3241;
+        color: var(--aquifer-text-dark-2);
         float: right;
         font-size: 28px;
         font-weight: bold;
@@ -93,7 +94,7 @@
         cursor: pointer;
     }
     .newChannelPopupInput {
-        background-color: #B6D9E7;
+        background-color: var(--aquifer-light-1);
         width: 80%;
         padding: 1% 5% 1% 5%;
         margin-left: 5%;
@@ -107,6 +108,6 @@
         margin-top: 10px;
         margin-left: calc(40% - 5px);
         text-align: center;
-        background-color: #B6D9E7;
+        background-color: var(--aquifer-light-1);
     }
 </style>

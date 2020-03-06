@@ -4,10 +4,10 @@
 
         </div>
         <ChannelList
-                :channels="channels"
-                @changedSelection="changeChannel"
-                @openChannelModal="openChannelModal"
-                @openNewChannelModal="openNewChannelModal"
+            :channels="channels"
+            @changedSelection="changeChannel"
+            @openChannelModal="openChannelModal"
+            @openNewChannelModal="openNewChannelModal"
         ></ChannelList>
         <div id="profileArea"
              v-bind:class="{
@@ -19,32 +19,32 @@
         </div>
         <div id="messages">
             <message-component
-                    v-for="message in currentMessages()"
-                    :key="message.id"
-                    :user="message.user"
-                    :date="message.date"
-                    :message="message.message"
-                    @click.native="oneClick(message)"
+                v-for="message in currentMessages()"
+                :key="message.id"
+                :user="message.user"
+                :date="message.date"
+                :message="message.message"
+                @click.native="oneClick(message)"
             ></message-component>
         </div>
         <UserList
-                :userList="userList"
+            :userList="userList"
         ></UserList>
         <input
-                v-on:keydown.enter="chatmessage"
-                id="sendMessage"
-                type="text"
-                autocomplete="off"
+            v-on:keydown.enter="chatmessage"
+            id="sendMessage"
+            type="text"
+            autocomplete="off"
         />
         <MsgPopup
-                v-if="msgModalDetails.modalOpen"
-                @closeMsgModal="closeModal('msg')"
-                @editMessage="editMessage"
-                @deleteMessage="deleteMessage"
-                :user="msgModalDetails.user"
-                :date="msgModalDetails.date"
-                :message="msgModalDetails.message"
-                :msgId="msgModalDetails.id"
+            v-if="msgModalDetails.modalOpen"
+            @closeMsgModal="closeModal('msg')"
+            @editMessage="editMessage"
+            @deleteMessage="deleteMessage"
+            :user="msgModalDetails.user"
+            :date="msgModalDetails.date"
+            :message="msgModalDetails.message"
+            :msgId="msgModalDetails.id"
         ></MsgPopup>
         <NewChannelPopup
             v-if="newChannelModalDetails.modalOpen"
@@ -66,6 +66,8 @@
     import Vue from 'vue';
     import moment from 'moment';
     import * as randomWords from "random-words";
+
+    import "../assets/colorVars.css";
 
     // import MessageComponent from './MessagesPageComponents/Message.vue';
     // import Channel from './MessagesPageComponents/Channel.vue';
@@ -120,9 +122,7 @@
             editingId: 0,
             clicks: 0,
             highestId: 0,
-            messages: [
-
-            ],
+            messages: [],
             // currentMessages: [],
             socketConnected: false,
         }),
@@ -131,12 +131,12 @@
         //         return this.messages.filter(message => message.channel == this.currentUser.currentChannel);
         //     },
         // },
-        created () {
+        created() {
             window.addEventListener("beforeunload", () => {
                 this.closeWebsocket();
             });
         },
-        mounted () {
+        mounted() {
             this.genName();
             const self = this;
             socket.onopen = () => {
@@ -275,12 +275,12 @@
             },
             oneClick(message) {
                 this.clicks++;
-                if(this.clicks === 1) {
+                if (this.clicks === 1) {
                     let self = this;
-                    this.timer = setTimeout(function() {
+                    this.timer = setTimeout(function () {
                         self.clicks = 0
                     }, 700);
-                } else{
+                } else {
                     console.log("Double click successful");
                     clearTimeout(this.timer);
                     this.msgModalDetails = {
@@ -298,7 +298,11 @@
             },
             genName() {
                 this.currentUser = {
-                    username: randomWords({exactly: 2, join: "", formatter: (word) => this.capitalizeFLetter(word)}).join(""),
+                    username: randomWords({
+                        exactly: 2,
+                        join: "",
+                        formatter: (word) => this.capitalizeFLetter(word)
+                    }).join(""),
                     userNum: Math.floor(Math.random() * 9000) + 1000
                 };
             }
@@ -314,11 +318,12 @@
         height: 100%;
         display: grid;
     }
+
     #servers {
         grid-column: 1;
         grid-row: 1 / 21;
         /* background-color: #044289; */
-        background-color: #347B98;
+        background-color: var(--aquifer-dark-2);
     }
 
     /*#channels {*/
@@ -332,7 +337,7 @@
     #profileArea {
         grid-column: 2 / 5;
         grid-row: 20;
-        background-color: #0B3241;
+        background-color: var(--aquifer-dark-3);
         border: solid black;
         border-width: 0 2px 0 2px;
         color: white;
@@ -342,7 +347,7 @@
 
     #messages {
         /* background: #9AC1EA; */
-        background: #B6D9E7;
+        background: var(--aquifer-light-1);
         grid-column: 5 / 18;
         grid-row: 1 / 20;
         border: solid black;
@@ -363,16 +368,18 @@
         /* float: left; */
         /*border: solid black;*/
         /*border-width: 0 0 0 0;*/
-        background: #E4F1F6;
+        background: var(--aquifer-light-2);
     }
 
     @media only screen and (max-width: 1100px) {
         #profileArea {
             grid-column: 2 / 6;
         }
+
         #messages {
             grid-column: 6 / 18;
         }
+
         #sendMessage {
             grid-column: 6 / 18;
         }

@@ -16,6 +16,10 @@ module.exports = {
                 test: /\.vue$/,
                 loader: 'vue-loader',
             },
+            {
+                test: /\.css$/i,
+                loader: ["style-loader", "css-loader"],
+            }
         ],
     },
     resolve: {
