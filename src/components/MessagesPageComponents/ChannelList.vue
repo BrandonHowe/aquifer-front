@@ -1,11 +1,22 @@
 <template>
     <div class="channelList">
-        <Channel v-for="channel in channels" :key="channel" :channelName="channel" v-on:click.native="changeSelection(channel)" v-bind:class="{coloredBackground: channel == currentlySelected, channelHover: channel != currentlySelected}"></Channel>
+        <Channel v-for="channel in channels" :key="channel.id" :channelName="channel.name" v-on:click.native="oneClick(channel.id)" v-bind:class="{coloredBackground: channel.id === currentlySelected, channelHover: channel.id !== currentlySelected}"></Channel>
+        <div id="newChannel" @click="newChannel">
+            New Channel
+        </div>
     </div>
 </template>
 
 <script>
 import Channel from './Channel.vue';
+import '../../assets/colorVars.css';
+
+// const isOpen = ws => ws.readyState === ws.OPEN;
+
+// PRODUCTION
+// const socket = new WebSocket("wss://aquifer-social.herokuapp.com");
+// DEV
+const socket = new WebSocket("ws://localhost:5000");
 
 export default {
     name: "ChannelList",
@@ -14,17 +25,47 @@ export default {
     },
     data() {
         return {
-            currentlySelected: null,
+            currentlySelected: 0,
+            clicks: {
+                num: 0,
+                channel: 0,
+            }
         }
     },
     props: {
-        channels: Array
+        channels: Object
     },
     methods: {
-        changeSelection (channelName) {
-            this.currentlySelected = channelName;
-            this.$emit("changedSelection", channelName);
+        changeSelection (channelId) {
+            this.currentlySelected = channelId;
+            console.log("New channel: " + channelId);
+            this.$emit("changedSelection", channelId);
+            socket.send(JSON.stringify(["changedSelection", channelId]));
             // console.log(channelName);
+        },
+        oneClick(newChannelId) {
+            this.changeSelection(newChannelId);
+            // console.log(this.clicks);
+            this.clicks.num++;
+            if(this.clicks.num === 1) {
+                let self = this;
+                this.clicks.channel = newChannelId;
+                this.timer = setTimeout(function() {
+                    self.clicks.num = 0
+                }, 700);
+            } else {
+                if (newChannelId === this.clicks.channel) {
+                    clearTimeout(this.timer);
+                    const selectedChannel = this.channels[this.currentlySelected];
+                    this.$emit("openChannelModal", selectedChannel);
+                    // console.log(this.modalDetails);
+                    this.clicks.num = 0;
+                }
+            }
+        },
+        newChannel () {
+            this.$emit("openNewChannelModal");
+            // socket.send(JSON.stringify(["newChannel", {name: "blah"}]))
         }
     }
 }
@@ -32,17 +73,25 @@ export default {
 
 <style scoped>
     .channelList {
-        grid-column: 2 / 6;
+        grid-column: 2 / 5;
         grid-row: 1 / 20;
         /* background: #4B6D93; */
-        background: #67AFCB;
+        background-color: var(--aquifer-medium-1);
         border: solid black;
-        border-width: 0px 2px 2px 2px;
+        border-width: 0 2px 2px 2px;
+    }
+    @media only screen and (max-width: 1100px) {
+        .channelList {
+            grid-column: 2 / 6;
+        }
+    }
+    .channelHover {
+        transition: background-color 0.1s;
     }
     .channelHover:hover {
-        background: #459DBF;
+        background-color: var(--aquifer-medium-2);
     }
     .coloredBackground {
-        background: #3B8BAB;
+        background-color: var(--aquifer-medium-3);
     }
 </style>

@@ -5,7 +5,8 @@
 </template>
 
 <script>
-export default {
+    import '../../assets/colorVars.css';
+    export default {
     name: "Channel",
     props: {
         channelName: String
@@ -21,7 +22,7 @@ export default {
         text-align: left;
         user-select: none;
         padding: 0px 5% 0px 5%;
-        color: #1A3E4C;
+        color: var(--aquifer-text-dark-1);
         /* text-overflow: clip; */
         /* white-space: nowrap; */
         /* overflow: hidden; */

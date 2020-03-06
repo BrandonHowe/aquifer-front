@@ -3,7 +3,7 @@
         <div class="msgpopup-content" @click="clickingMain = true">
             <span class="close" @click="closeModal('x')">&times;</span>
             <div class="msgpopup-header">
-                <p><span class="message-username">{{user}}</span>  <span class="message-date">{{date}}</span></p>
+                <p><span class="message-username">{{user.username}}#{{user.usernum}}</span>  <span class="message-date">{{date}}</span></p>
                 <p class="message-content">{{message}}</p>
                 <p>Message ID: {{msgId}}</p>
             </div>
@@ -17,11 +17,12 @@
 
 <script>
 import '@coreui/icons';
+import '../../assets/colorVars.css';
 
 export default {
     name: "MsgPopup",
     props: {
-        user: String,
+        user: Object,
         date: String,
         message: String,
         msgId: Number,
@@ -32,18 +33,18 @@ export default {
     methods: {
         editMessage() {
             this.$emit("editMessage", this.msgId);
-            this.$emit("closeModal");
+            this.$emit("closeMsgModal");
             this.clickingMain = false;
         },
         deleteMessage() {
             this.$emit("deleteMessage", this.msgId);
-            this.$emit("closeModal");
+            this.$emit("closeMsgModal");
             this.clickingMain = false;
         },
         closeModal(type) {
             if (this.clickingMain === false || type === "x") {
                 this.clickingMain = false;
-                this.$emit("closeModal");
+                this.$emit("closeMsgModal");
             }
         }
     }
@@ -70,11 +71,11 @@ export default {
     /* Fallback color */
     background-color: rgba(0, 0, 0, 0.7);
     text-align: left;
-    color: #0B3241;
+    color: var(--aquifer-text-dark-2);
     /* Black w/ opacity */
 }
 .msgpopup-content {
-    background-color: #6B9BAE;
+    background-color: var(--aquifer-medium-4);
     margin: 10% auto;
     /* 15% from the top and centered */
     height: 60%;
@@ -84,7 +85,7 @@ export default {
     /* Could be more or less, depending on screen size */
 }
 .close {
-    color: #0B3241;
+    color: var(--aquifer-text-dark-2);
     float: right;
     font-size: 28px;
     font-weight: bold;
@@ -102,13 +103,13 @@ export default {
 }
 .message-date {
     font-size: 10px;
-    color: #0B3241;
+    color: var(--aquifer-text-dark-2);
 }
 .message-content {
     color: azure;
 }
 .msgpopup-action:hover {
-    background-color: #78A4B5;
+    background-color: var(--aquifer-light-3);
     margin: -10px;
     padding: 10px;
 }
