@@ -62,20 +62,20 @@
 <script>
     /* eslint-disable */
     // import '@types/node';
-    import $ from 'jquery';
+
+    //TODO: add double click functionality for messages
+
     import Vue from 'vue';
-    // import Vuex from 'vuex';
     import moment from 'moment';
     import * as randomWords from "random-words";
-    // import VueNativeSock from 'vue-native-websocket';
 
-    import MessageComponent from './MessagesPageComponents/Message.vue';
-    import Channel from './MessagesPageComponents/Channel.vue';
-    import ChannelList from './MessagesPageComponents/ChannelList.vue';
-    import MsgPopup from './MessagesPageComponents/MsgPopup.vue';
-    import NewChannelPopup from './MessagesPageComponents/NewChannelPopup.vue';
-    import UserList from './MessagesPageComponents/UserList.vue';
-    import ChannelPopup from "./MessagesPageComponents/ChannelPopup.vue";
+    // import MessageComponent from './MessagesPageComponents/Message.vue';
+    // import Channel from './MessagesPageComponents/Channel.vue';
+    // import ChannelList from './MessagesPageComponents/ChannelList.vue';
+    // import MsgPopup from './MessagesPageComponents/MsgPopup.vue';
+    // import NewChannelPopup from './MessagesPageComponents/NewChannelPopup.vue';
+    // import UserList from './MessagesPageComponents/UserList.vue';
+    // import ChannelPopup from "./MessagesPageComponents/ChannelPopup.vue";
 
     const isOpen = ws => ws.readyState === ws.OPEN;
 
@@ -90,13 +90,13 @@
     export default {
         name: 'MessagesPage',
         components: {
-            ChannelPopup,
-            MessageComponent,
-            Channel,
-            ChannelList,
-            MsgPopup,
-            UserList,
-            NewChannelPopup,
+            ChannelPopup: () => import("./MessagesPageComponents/ChannelPopup.vue"),
+            MessageComponent: () => import('./MessagesPageComponents/Message.vue'),
+            Channel: () => import('./MessagesPageComponents/Channel.vue'),
+            ChannelList: () => import('./MessagesPageComponents/ChannelList.vue'),
+            MsgPopup: () => import('./MessagesPageComponents/MsgPopup.vue'),
+            UserList: () => import('./MessagesPageComponents/UserList.vue'),
+            NewChannelPopup: () => import('./MessagesPageComponents/NewChannelPopup.vue'),
         },
         data: () => ({
             moment: moment,
@@ -228,8 +228,8 @@
             chatmessage() {
                 if (this.editing === false) {
                     // Send the "pingServer" event to the server.
-                    const message = $("#sendMessage").val();
-                    $("#sendMessage").val("");
+                    const message = document.getElementById("sendMessage").value;
+                    document.getElementById("sendMessage").value = "";
                     const newMessage = {
                         user: this.currentUser,
                         message: message,
@@ -238,11 +238,11 @@
                     socket.send(JSON.stringify(["message", newMessage]));
                 } else {
                     const newMessage = {
-                        msg: $("#sendMessage").val(),
+                        msg: document.getElementById("sendMessage").value,
                         id: this.editingId,
                     };
                     this.editing = false;
-                    $("#sendMessage").val("");
+                    document.getElementById("sendMessage").value = "";
                     socket.send(JSON.stringify(["editMessage", newMessage]));
                 }
             },
@@ -256,7 +256,7 @@
             editMessage(messageId) {
                 for (let i in this.messages) {
                     if (this.messages[i].id === messageId) {
-                        $("#sendMessage").val(this.messages[i].message);
+                        document.getElementById("#sendMessage").value = this.messages[i].message;
                         this.editing = true;
                         this.editingId = messageId;
                     }
