@@ -35,6 +35,8 @@
             id="sendMessage"
             type="text"
             autocomplete="off"
+            :disabled="!(currentUser.currentChannel > 0)"
+            v-bind:style="[currentUser.currentChannel > 0 ? {'background-color': 'var(--aquifer-light-2)'} : {'background-color': 'gray', 'border-color': 'gray'}]"
         />
         <MsgPopup
             v-if="msgModalDetails.modalOpen"
@@ -79,10 +81,15 @@
 
     const isOpen = ws => ws.readyState === ws.OPEN;
 
+    import { setWsHeartbeat } from "ws-heartbeat/client";
     // PRODUCTION
-    const socket = new WebSocket("wss://aquifer-social.herokuapp.com");
+    // const socket = new WebSocket("wss://aquifer-social.herokuapp.com");
     // DEV
-    // const socket = new WebSocket("ws://localhost:5000");
+    const socket = new WebSocket("ws://localhost:5000");
+    setWsHeartbeat(socket, '{"kind":"ping"}', {
+        pingTimeout: 60000, // in 60 seconds, if no message accepted from server, close the connection.
+        pingInterval: 25000, // every 25 seconds, send a ping message to the server.
+    });
 
     export default {
         name: 'MessagesPage',
@@ -115,7 +122,7 @@
             currentUser: {
                 username: "DefaultUser",
                 userNum: 1234,
-                currentChannel: 1,
+                currentChannel: 0,
             },
             userList: {},
             editing: false,
@@ -125,6 +132,7 @@
             messages: [],
             // currentMessages: [],
             socketConnected: false,
+            pingTimeout: null,
         }),
         // computed: {
         //     currentMessages: function () {
@@ -141,69 +149,82 @@
             const self = this;
             socket.onopen = () => {
                 this.socketConnected = true;
+                // this.heartbeat();
                 socket.send(JSON.stringify(["queryMessages", "query"]));
                 socket.send(JSON.stringify(["queryChannels", "query"]));
+                console.log(self.currentUser);
                 socket.send(JSON.stringify(["newUser", self.currentUser]));
             };
             socket.onclose = () => {
                 socket.send(JSON.stringify(["loseUser", self.currentUser]));
                 this.socketConnected = false;
+                clearTimeout(this.pingTimeout);
             };
             socket.onmessage = (data) => {
-                const [category, message] = JSON.parse(data.data);
-                if (category === "message") {
-                    const messagesElement = document.getElementById("messages");
-                    const isScrolledToBottom = messagesElement.scrollTop + messagesElement.clientHeight <= messagesElement.scrollHeight + 1;
-                    socket.send(JSON.stringify(["queryMessages", "query"]));
-                    setImmediate(() => {
-                        const newmessagesElement = document.getElementById("messages");
-                        if (isScrolledToBottom) {
-                            newmessagesElement.scrollTop = newmessagesElement.scrollHeight + newmessagesElement.clientHeight;
-                        }
-                    });
-                }
-                if (category === "editMessage") {
-                    for (const i in this.messages) {
-                        if (this.messages[i].id === message.id) {
-                            this.messages[i].message = message.msg;
+                if (data.data !== '{"kind":"pong"}') {
+                    const [category, message] = JSON.parse(data.data);
+                    if (category === "message") {
+                        const messagesElement = document.getElementById("messages");
+                        const isScrolledToBottom = messagesElement.scrollTop + messagesElement.clientHeight <= messagesElement.scrollHeight + 1;
+                        socket.send(JSON.stringify(["queryMessages", "query"]));
+                        setImmediate(() => {
+                            const newmessagesElement = document.getElementById("messages");
+                            if (isScrolledToBottom) {
+                                newmessagesElement.scrollTop = newmessagesElement.scrollHeight + newmessagesElement.clientHeight;
+                            }
+                        });
+                    }
+                    if (category === "editMessage") {
+                        for (const i in this.messages) {
+                            if (this.messages[i].id === message.id) {
+                                this.messages[i].message = message.msg;
+                            }
                         }
                     }
-                }
-                if (category === "deleteMessage") {
-                    this.messages.splice(message, 1);
-                }
-                if (category === "messageList") {
-                    this.messages = message;
-                    const messagesElement = document.getElementById("messages");
-                    const isScrolledToBottom = messagesElement.scrollTop + messagesElement.clientHeight <= messagesElement.scrollHeight + 1;
-                    setImmediate(() => {
-                        const newmessagesElement = document.getElementById("messages");
-                        if (isScrolledToBottom) {
-                            newmessagesElement.scrollTop = newmessagesElement.scrollHeight + newmessagesElement.clientHeight;
-                        }
-                    });
-                }
-                if (category === "channelList") {
-                    this.channels = message;
-                }
-                if (category === "newUser") {
-                    this.userList = message;
-                }
-                if (category === "loseUser") {
-                    this.userList = message;
-                }
-                if (category === "bestowId") {
-                    this.currentUser.id = message;
-                }
-                if (category === "newChannel") {
-                    this.channels = message;
-                }
-                if (category === "deleteChannel") {
-                    this.channels = message;
+                    if (category === "deleteMessage") {
+                        this.messages.splice(message, 1);
+                    }
+                    if (category === "messageList") {
+                        this.messages = message;
+                        const messagesElement = document.getElementById("messages");
+                        const isScrolledToBottom = messagesElement.scrollTop + messagesElement.clientHeight <= messagesElement.scrollHeight + 1;
+                        setImmediate(() => {
+                            const newmessagesElement = document.getElementById("messages");
+                            if (isScrolledToBottom) {
+                                newmessagesElement.scrollTop = newmessagesElement.scrollHeight + newmessagesElement.clientHeight;
+                            }
+                        });
+                    }
+                    if (category === "channelList") {
+                        this.channels = message;
+                    }
+                    if (category === "newUser") {
+                        this.userList = message;
+                    }
+                    if (category === "loseUser") {
+                        this.userList = message;
+                    }
+                    if (category === "bestowId") {
+                        this.currentUser.id = message;
+                    }
+                    if (category === "newChannel") {
+                        this.channels = message;
+                    }
+                    if (category === "deleteChannel") {
+                        this.channels = message;
+                    }
                 }
             }
         },
         methods: {
+            // heartbeat() {
+            //     console.log("Heartbeat");
+            //     clearTimeout(this.pingTimeout);
+            //     socket.send("ping");
+            //     this.pingTimeout = setTimeout(() => {
+            //         this.terminate();
+            //     }, 30000 + 1000);
+            // },
             currentMessages() {
                 return this.messages.filter(message => message.channel === this.currentUser.currentChannel);
             },
@@ -211,24 +232,27 @@
                 return string.replace(/^./, string[0].toUpperCase());
             },
             chatmessage() {
-                if (this.editing === false) {
-                    // Send the "pingServer" event to the server.
-                    const message = document.getElementById("sendMessage").value;
-                    document.getElementById("sendMessage").value = "";
-                    const newMessage = {
-                        user: this.currentUser,
-                        message: message,
-                        channel: this.currentUser.currentChannel,
-                    };
-                    socket.send(JSON.stringify(["message", newMessage]));
-                } else {
-                    const newMessage = {
-                        msg: document.getElementById("sendMessage").value,
-                        id: this.editingId,
-                    };
-                    this.editing = false;
-                    document.getElementById("sendMessage").value = "";
-                    socket.send(JSON.stringify(["editMessage", newMessage]));
+                console.log("Current channel: " + this.currentUser.currentChannel);
+                if (this.currentUser.currentChannel > 0) {
+                    if (this.editing === false) {
+                        // Send the "pingServer" event to the server.
+                        const message = document.getElementById("sendMessage").value;
+                        document.getElementById("sendMessage").value = "";
+                        const newMessage = {
+                            user: this.currentUser,
+                            message: message,
+                            channel: this.currentUser.currentChannel,
+                        };
+                        socket.send(JSON.stringify(["message", newMessage]));
+                    } else {
+                        const newMessage = {
+                            msg: document.getElementById("sendMessage").value,
+                            id: this.editingId,
+                        };
+                        this.editing = false;
+                        document.getElementById("sendMessage").value = "";
+                        socket.send(JSON.stringify(["editMessage", newMessage]));
+                    }
                 }
             },
             changeChannel(currentChannel) {
