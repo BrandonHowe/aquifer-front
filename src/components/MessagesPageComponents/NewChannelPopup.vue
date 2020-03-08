@@ -23,6 +23,9 @@
     import '@coreui/icons';
     import '../../assets/colorVars.css';
 
+    // PRODUCTION
+    // const socket = new WebSocket("wss://aquifer-social.herokuapp.com");
+    // DEV
     const socket = new WebSocket("ws://localhost:5000");
 
     export default {
