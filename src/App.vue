@@ -23,17 +23,23 @@ export default {
 </script>
 
 <style>
-#app {
-    font-family: Avenir, Helvetica, Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    text-align: center;
-    color: #2c3e50;
-    /* display: grid; */
-    height: 100vh;
-    width: 100%;
-    position: fixed;
-    top: 0px;
-    left: 0px;
-}
+    body {
+        width: calc(100vw + 10px);
+        margin: 0;
+        overflow-x: hidden;
+        position: absolute;
+    }
+    #app {
+         font-family: Avenir, Helvetica, Arial, sans-serif;
+         -webkit-font-smoothing: antialiased;
+         -moz-osx-font-smoothing: grayscale;
+         text-align: center;
+         color: #2c3e50;
+         /* display: grid; */
+         height: 100%;
+         width: 100%;
+         /*position: fixed;*/
+         top: 0px;
+         left: 0px;
+    }
 </style>

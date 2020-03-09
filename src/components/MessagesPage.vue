@@ -15,7 +15,12 @@
                  green: socketConnected
              }"
         >
-            {{currentUser.username}}#{{currentUser.userNum}}
+            <router-link
+                to="/about"
+                class="profileRouterLink"
+            >
+                {{currentUser.username}}#{{currentUser.userNum}}
+            </router-link>
         </div>
         <div id="messages">
             <message-component
@@ -83,9 +88,9 @@
 
     import { setWsHeartbeat } from "ws-heartbeat/client";
     // PRODUCTION
-    // const socket = new WebSocket("wss://aquifer-social.herokuapp.com");
+    const socket = new WebSocket("wss://aquifer-social.herokuapp.com");
     // DEV
-    const socket = new WebSocket("ws://localhost:5000");
+    // const socket = new WebSocket("ws://localhost:5000");
     setWsHeartbeat(socket, '{"kind":"ping"}', {
         pingTimeout: 60000, // in 60 seconds, if no message accepted from server, close the connection.
         pingInterval: 25000, // every 25 seconds, send a ping message to the server.
@@ -340,7 +345,11 @@
         grid-auto-rows: 5%;
         grid-gap: 0;
         height: 100%;
+        width: 100%;
         display: grid;
+        position: fixed;
+        top: 0;
+        left: 0;
     }
 
     #servers {
@@ -407,6 +416,9 @@
         #sendMessage {
             grid-column: 6 / 18;
         }
+    }
+    .profileRouterLink {
+        color: azure;
     }
 
     /*#submitForm {*/
