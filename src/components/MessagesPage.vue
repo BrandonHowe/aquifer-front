@@ -88,9 +88,9 @@
 
     import { setWsHeartbeat } from "ws-heartbeat/client";
     // PRODUCTION
-    // const socket = new WebSocket("wss://aquifer-social.herokuapp.com");
+    const socket = new WebSocket("wss://aquifer-social.herokuapp.com");
     // DEV
-    const socket = new WebSocket("ws://localhost:5000");
+    // const socket = new WebSocket("ws://localhost:5000");
 
     setWsHeartbeat(socket, '{"kind":"ping"}', {
         pingTimeout: 60000, // in 60 seconds, if no message accepted from server, close the connection.
