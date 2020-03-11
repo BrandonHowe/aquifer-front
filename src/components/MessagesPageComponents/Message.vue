@@ -1,23 +1,30 @@
 <template>
     <div class="message">
-        <p> <span class="message-username">{{user.username}}</span>  <span class="message-date">{{date}}</span></p>
+        <p><span class="message-username">{{user.username}}</span> <span class="message-date">{{formattedTime}}</span></p>
         <p class="message-content">{{message}}</p>
     </div>
 </template>
 
 <script>
     import '../../assets/colorVars.css';
-export default {
-    name: "Message",
-    props: {
-        user: Object,
-        date: String,
-        message: String
-    },
-    // data: () => ({
-    //     clicks: 0
-    // }),
-}
+    import moment from 'moment';
+
+    export default {
+        name: "Message",
+        props: {
+            user: Object,
+            utctime: Number,
+            message: String
+        },
+        computed: {
+            formattedTime () {
+                return moment(this.utctime).calendar();
+            }
+        }
+        // data: () => ({
+        //     clicks: 0
+        // }),
+    }
 </script>
 
 <style scoped>
@@ -29,17 +36,21 @@ export default {
         padding: 10px 3% 10px 3%;
         word-wrap: break-word;
     }
+
     .message:hover {
         background-color: var(--aquifer-dark-1);
     }
+
     .message-username {
         color: darkred;
         font-size: 20px;
     }
+
     .message-date {
         font-size: 10px;
         color: var(--aquifer-text-dark-2);
     }
+
     .message-content {
         color: #ccc;
     }

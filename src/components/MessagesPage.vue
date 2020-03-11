@@ -27,7 +27,7 @@
                 v-for="message in currentMessages()"
                 :key="message.id"
                 :user="message.user"
-                :date="message.date"
+                :utctime="message.date"
                 :message="message.message"
                 @click.native="oneClick(message)"
             ></message-component>
@@ -88,9 +88,9 @@
 
     import { setWsHeartbeat } from "ws-heartbeat/client";
     // PRODUCTION
-    const socket = new WebSocket("wss://aquifer-social.herokuapp.com");
+    // const socket = new WebSocket("wss://aquifer-social.herokuapp.com");
     // DEV
-    // const socket = new WebSocket("ws://localhost:5000");
+    const socket = new WebSocket("ws://localhost:5000");
 
     setWsHeartbeat(socket, '{"kind":"ping"}', {
         pingTimeout: 60000, // in 60 seconds, if no message accepted from server, close the connection.
@@ -206,7 +206,7 @@
                     }
                     if (category === "newUser") {
                         this.userList = message;
-                        console.log(message);
+                        // console.log(message);
                     }
                     if (category === "loseUser") {
                         this.userList = message;
@@ -236,7 +236,7 @@
                         // Send the "pingServer" event to the server.
                         const message = document.getElementById("sendMessage").value;
                         document.getElementById("sendMessage").value = "";
-                        console.log(this.currentUser);
+                        // console.log(this.currentUser);
                         const newMessage = {
                             user: this.currentUser,
                             message: message,
@@ -311,7 +311,7 @@
                             username: message.user.username,
                             usernum: message.user.userNum,
                         },
-                        date: message.date,
+                        date: message.utctime,
                         message: message.message,
                         id: message.id,
                     };
