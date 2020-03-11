@@ -27,6 +27,7 @@ export default {
         /* height: 50px; */
         text-align: left;
         padding: 10px 3% 10px 3%;
+        word-wrap: break-word;
     }
     .message:hover {
         background-color: var(--aquifer-dark-1);

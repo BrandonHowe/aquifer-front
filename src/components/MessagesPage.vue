@@ -272,6 +272,7 @@
                 }
             },
             deleteChannel(channelId) {
+                this.changeChannel(0);
                 socket.send(JSON.stringify(["deleteChannel", channelId]));
             },
             deleteMessage(messageId) {
