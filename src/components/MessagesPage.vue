@@ -88,9 +88,10 @@
 
     import { setWsHeartbeat } from "ws-heartbeat/client";
     // PRODUCTION
-    const socket = new WebSocket("wss://aquifer-social.herokuapp.com");
+    // const socket = new WebSocket("wss://aquifer-social.herokuapp.com");
     // DEV
-    // const socket = new WebSocket("ws://localhost:5000");
+    const socket = new WebSocket("ws://localhost:5000");
+
     setWsHeartbeat(socket, '{"kind":"ping"}', {
         pingTimeout: 60000, // in 60 seconds, if no message accepted from server, close the connection.
         pingInterval: 25000, // every 25 seconds, send a ping message to the server.
@@ -262,6 +263,7 @@
             },
             changeChannel(currentChannel) {
                 Vue.set(this.currentUser, "currentChannel", currentChannel);
+                socket.send(JSON.stringify(["changedSelection", currentChannel]));
             },
             closeWebsocket() {
                 socket.send(JSON.stringify(["loseUser", this.currentUser]));

@@ -13,11 +13,6 @@ import '../../assets/colorVars.css';
 
 // const isOpen = ws => ws.readyState === ws.OPEN;
 
-// PRODUCTION
-const socket = new WebSocket("wss://aquifer-social.herokuapp.com");
-// DEV
-// const socket = new WebSocket("ws://localhost:5000");
-
 export default {
     name: "ChannelList",
     components: {
@@ -40,7 +35,6 @@ export default {
             this.currentlySelected = channelId;
             console.log("New channel: " + channelId);
             this.$emit("changedSelection", channelId);
-            socket.send(JSON.stringify(["changedSelection", channelId]));
             // console.log(channelName);
         },
         oneClick(newChannelId) {

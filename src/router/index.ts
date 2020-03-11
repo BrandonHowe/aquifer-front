@@ -19,9 +19,10 @@ export default new Router({
             component: AboutPage
         },
         {
-            path: "/user/:name",
+            path: "/user/:user",
             name: "User Profile",
             component: UserPage,
+            props: true
         }
     ]
 })
