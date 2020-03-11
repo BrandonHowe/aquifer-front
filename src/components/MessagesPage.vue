@@ -129,6 +129,7 @@
                 username: "DefaultUser",
                 userNum: 1234,
                 currentChannel: 0,
+                messages: [],
             },
             userList: {},
             editing: false,
@@ -158,7 +159,6 @@
                 // this.heartbeat();
                 socket.send(JSON.stringify(["queryMessages", "query"]));
                 socket.send(JSON.stringify(["queryChannels", "query"]));
-                console.log(self.currentUser);
                 socket.send(JSON.stringify(["newUser", self.currentUser]));
             };
             socket.onclose = () => {
@@ -206,6 +206,7 @@
                     }
                     if (category === "newUser") {
                         this.userList = message;
+                        console.log(message);
                     }
                     if (category === "loseUser") {
                         this.userList = message;
@@ -223,14 +224,6 @@
             }
         },
         methods: {
-            // heartbeat() {
-            //     console.log("Heartbeat");
-            //     clearTimeout(this.pingTimeout);
-            //     socket.send("ping");
-            //     this.pingTimeout = setTimeout(() => {
-            //         this.terminate();
-            //     }, 30000 + 1000);
-            // },
             currentMessages() {
                 return this.messages.filter(message => message.channel === this.currentUser.currentChannel);
             },
@@ -238,12 +231,12 @@
                 return string.replace(/^./, string[0].toUpperCase());
             },
             chatmessage() {
-                console.log("Current channel: " + this.currentUser.currentChannel);
                 if (this.currentUser.currentChannel > 0) {
                     if (this.editing === false) {
                         // Send the "pingServer" event to the server.
                         const message = document.getElementById("sendMessage").value;
                         document.getElementById("sendMessage").value = "";
+                        console.log(this.currentUser);
                         const newMessage = {
                             user: this.currentUser,
                             message: message,
@@ -286,7 +279,6 @@
             },
             closeModal(whichOne) {
                 if (whichOne === "msg") {
-                    console.log("close");
                     this.msgModalDetails.modalOpen = false;
                 }
                 if (whichOne === "newChannel") {
@@ -300,7 +292,6 @@
                 this.newChannelModalDetails.modalOpen = true;
             },
             openChannelModal(data) {
-                console.log(data);
                 this.channelModalDetails.selectedChannel = data;
                 this.channelModalDetails.modalOpen = true;
             },
@@ -312,7 +303,6 @@
                         self.clicks = 0
                     }, 700);
                 } else {
-                    console.log("Double click successful");
                     clearTimeout(this.timer);
                     this.msgModalDetails = {
                         modalOpen: true,
@@ -334,7 +324,8 @@
                         join: "",
                         formatter: (word) => this.capitalizeFLetter(word)
                     }).join(""),
-                    userNum: Math.floor(Math.random() * 9000) + 1000
+                    userNum: Math.floor(Math.random() * 9000) + 1000,
+                    messages: [],
                 };
             }
         }
