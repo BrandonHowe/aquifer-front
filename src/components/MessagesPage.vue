@@ -156,9 +156,9 @@
             const self = this;
             socket.onopen = () => {
                 this.socketConnected = true;
-                // this.heartbeat();
                 socket.send(JSON.stringify(["queryMessages", "query"]));
                 socket.send(JSON.stringify(["queryChannels", "query"]));
+                console.log(self.currentUser);
                 socket.send(JSON.stringify(["newUser", self.currentUser]));
             };
             socket.onclose = () => {
