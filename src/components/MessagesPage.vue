@@ -192,6 +192,7 @@
                     }
                     if (category === "messageList") {
                         this.messages = message;
+                        console.log(message);
                         const messagesElement = document.getElementById("messages");
                         const isScrolledToBottom = messagesElement.scrollTop + messagesElement.clientHeight <= messagesElement.scrollHeight + 1;
                         setImmediate(() => {
@@ -328,6 +329,13 @@
                     userNum: Math.floor(Math.random() * 9000) + 1000,
                     messages: [],
                 };
+                while (this.currentUser.username.length > 16) {
+                    this.currentUser.username = randomWords({
+                        exactly: 2,
+                        join: "",
+                        formatter: (word) => this.capitalizeFLetter(word)
+                    }).join("");
+                }
             }
         }
     }
