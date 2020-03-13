@@ -27,7 +27,7 @@
                 v-for="message in currentMessages()"
                 :key="message.id"
                 :user="message.user"
-                :utctime="message.date"
+                :utctime="Number(message.utctime)"
                 :message="message.message"
                 @click.native="oneClick(message)"
             ></message-component>
@@ -49,7 +49,7 @@
             @editMessage="editMessage"
             @deleteMessage="deleteMessage"
             :user="msgModalDetails.user"
-            :date="msgModalDetails.date"
+            :date="Number(msgModalDetails.date)"
             :message="msgModalDetails.message"
             :msgId="msgModalDetails.id"
         ></MsgPopup>
