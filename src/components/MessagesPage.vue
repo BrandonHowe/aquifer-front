@@ -27,7 +27,7 @@
                 v-for="message in currentMessages()"
                 :key="message.id"
                 :user="message.user"
-                :utctime="Number(message.utctime)"
+                :utcTime="Number(message.utcTime)"
                 :message="message.message"
                 @click.native="oneClick(message)"
             ></message-component>
@@ -75,14 +75,6 @@
     import * as randomWords from "random-words";
 
     import "../assets/colorVars.css";
-
-    // import MessageComponent from './MessagesPageComponents/Message.vue';
-    // import Channel from './MessagesPageComponents/Channel.vue';
-    // import ChannelList from './MessagesPageComponents/ChannelList.vue';
-    // import MsgPopup from './MessagesPageComponents/MsgPopup.vue';
-    // import NewChannelPopup from './MessagesPageComponents/NewChannelPopup.vue';
-    // import UserList from './MessagesPageComponents/UserList.vue';
-    // import ChannelPopup from "./MessagesPageComponents/ChannelPopup.vue";
 
     const isOpen = ws => ws.readyState === ws.OPEN;
 
@@ -312,7 +304,7 @@
                             username: message.user.username,
                             usernum: message.user.userNum,
                         },
-                        date: message.utctime,
+                        date: message.utcTime,
                         message: message.message,
                         id: message.id,
                     };

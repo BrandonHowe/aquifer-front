@@ -13,12 +13,12 @@
         name: "Message",
         props: {
             user: Object,
-            utctime: Number,
+            utcTime: Number,
             message: String
         },
         computed: {
             formattedTime () {
-                return moment(this.utctime).calendar();
+                return moment(this.utcTime).calendar();
             }
         }
         // data: () => ({
