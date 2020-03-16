@@ -129,15 +129,9 @@
             clicks: 0,
             highestId: 0,
             messages: [],
-            // currentMessages: [],
             socketConnected: false,
             pingTimeout: null,
         }),
-        // computed: {
-        //     currentMessages: function () {
-        //         return this.messages.filter(message => message.channel == this.currentUser.currentChannel);
-        //     },
-        // },
         created() {
             window.addEventListener("beforeunload", () => {
                 this.closeWebsocket();
@@ -150,7 +144,6 @@
                 this.socketConnected = true;
                 socket.send(JSON.stringify(["queryMessages", "query"]));
                 socket.send(JSON.stringify(["queryChannels", "query"]));
-                console.log(self.currentUser);
                 socket.send(JSON.stringify(["newUser", self.currentUser]));
             };
             socket.onclose = () => {
@@ -184,7 +177,6 @@
                     }
                     if (category === "messageList") {
                         this.messages = message;
-                        console.log(message);
                         const messagesElement = document.getElementById("messages");
                         const isScrolledToBottom = messagesElement.scrollTop + messagesElement.clientHeight <= messagesElement.scrollHeight + 1;
                         setImmediate(() => {
@@ -199,7 +191,6 @@
                     }
                     if (category === "newUser") {
                         this.userList = message;
-                        // console.log(message);
                     }
                     if (category === "loseUser") {
                         this.userList = message;
@@ -229,7 +220,6 @@
                         // Send the "pingServer" event to the server.
                         const message = document.getElementById("sendMessage").value;
                         document.getElementById("sendMessage").value = "";
-                        // console.log(this.currentUser);
                         const newMessage = {
                             user: this.currentUser,
                             message: message,
