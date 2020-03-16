@@ -3,7 +3,7 @@
         <div class="msgpopup-content" @click="clickingMain = true">
             <span class="close" @click="closeModal('x')">&times;</span>
             <div class="msgpopup-header">
-                <p><span class="message-username">{{user.username}}#{{user.usernum}}</span>  <span class="message-date">{{date}}</span></p>
+                <p><span class="message-username">{{user.username}}#{{user.usernum}}</span>  <span class="message-date">{{formattedDate}}</span></p>
                 <p class="message-content">{{message}}</p>
                 <p>Message ID: {{msgId}}</p>
             </div>
@@ -18,12 +18,13 @@
 <script>
 import '@coreui/icons';
 import '../../assets/colorVars.css';
+import moment from 'moment';
 
 export default {
     name: "MsgPopup",
     props: {
         user: Object,
-        date: String,
+        date: Number,
         message: String,
         msgId: Number,
     },
@@ -46,6 +47,11 @@ export default {
                 this.clickingMain = false;
                 this.$emit("closeMsgModal");
             }
+        }
+    },
+    computed: {
+        formattedDate () {
+            return moment(this.date).calendar();
         }
     }
 }

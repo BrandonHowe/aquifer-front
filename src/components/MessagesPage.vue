@@ -27,7 +27,7 @@
                 v-for="message in currentMessages()"
                 :key="message.id"
                 :user="message.user"
-                :date="message.date"
+                :utcTime="Number(message.utcTime)"
                 :message="message.message"
                 @click.native="oneClick(message)"
             ></message-component>
@@ -49,7 +49,7 @@
             @editMessage="editMessage"
             @deleteMessage="deleteMessage"
             :user="msgModalDetails.user"
-            :date="msgModalDetails.date"
+            :date="Number(msgModalDetails.date)"
             :message="msgModalDetails.message"
             :msgId="msgModalDetails.id"
         ></MsgPopup>
@@ -76,21 +76,13 @@
 
     import "../assets/colorVars.css";
 
-    // import MessageComponent from './MessagesPageComponents/Message.vue';
-    // import Channel from './MessagesPageComponents/Channel.vue';
-    // import ChannelList from './MessagesPageComponents/ChannelList.vue';
-    // import MsgPopup from './MessagesPageComponents/MsgPopup.vue';
-    // import NewChannelPopup from './MessagesPageComponents/NewChannelPopup.vue';
-    // import UserList from './MessagesPageComponents/UserList.vue';
-    // import ChannelPopup from "./MessagesPageComponents/ChannelPopup.vue";
-
     const isOpen = ws => ws.readyState === ws.OPEN;
 
     import { setWsHeartbeat } from "ws-heartbeat/client";
     // PRODUCTION
-    const socket = new WebSocket("wss://aquifer-social.herokuapp.com");
+    // const socket = new WebSocket("wss://aquifer-social.herokuapp.com");
     // DEV
-    // const socket = new WebSocket("ws://localhost:5000");
+    const socket = new WebSocket("ws://localhost:5000");
 
     setWsHeartbeat(socket, '{"kind":"ping"}', {
         pingTimeout: 60000, // in 60 seconds, if no message accepted from server, close the connection.
@@ -137,15 +129,9 @@
             clicks: 0,
             highestId: 0,
             messages: [],
-            // currentMessages: [],
             socketConnected: false,
             pingTimeout: null,
         }),
-        // computed: {
-        //     currentMessages: function () {
-        //         return this.messages.filter(message => message.channel == this.currentUser.currentChannel);
-        //     },
-        // },
         created() {
             window.addEventListener("beforeunload", () => {
                 this.closeWebsocket();
@@ -156,7 +142,6 @@
             const self = this;
             socket.onopen = () => {
                 this.socketConnected = true;
-                // this.heartbeat();
                 socket.send(JSON.stringify(["queryMessages", "query"]));
                 socket.send(JSON.stringify(["queryChannels", "query"]));
                 socket.send(JSON.stringify(["newUser", self.currentUser]));
@@ -206,7 +191,6 @@
                     }
                     if (category === "newUser") {
                         this.userList = message;
-                        console.log(message);
                     }
                     if (category === "loseUser") {
                         this.userList = message;
@@ -236,7 +220,6 @@
                         // Send the "pingServer" event to the server.
                         const message = document.getElementById("sendMessage").value;
                         document.getElementById("sendMessage").value = "";
-                        console.log(this.currentUser);
                         const newMessage = {
                             user: this.currentUser,
                             message: message,
@@ -311,7 +294,7 @@
                             username: message.user.username,
                             usernum: message.user.userNum,
                         },
-                        date: message.date,
+                        date: message.utcTime,
                         message: message.message,
                         id: message.id,
                     };
@@ -328,6 +311,13 @@
                     userNum: Math.floor(Math.random() * 9000) + 1000,
                     messages: [],
                 };
+                while (this.currentUser.username.length > 16) {
+                    this.currentUser.username = randomWords({
+                        exactly: 2,
+                        join: "",
+                        formatter: (word) => this.capitalizeFLetter(word)
+                    }).join("");
+                }
             }
         }
     }
