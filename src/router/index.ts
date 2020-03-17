@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import MessagesPage from '../components/MessagesPage.vue';
+import Messages from '../views/Messages.vue';
 import AboutPage from '../components/AboutPage.vue';
 import LoginPage from '../components/LoginPage.vue';
 import UserPage from '../components/UserPage.vue';
@@ -12,7 +12,7 @@ export default new Router({
         {
             path: "/",
             name: "Messages",
-            component: MessagesPage
+            component: Messages
         },
         {
             path: "/about",

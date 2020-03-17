@@ -100,6 +100,9 @@
             UserList: () => import('./MessagesPageComponents/UserList.vue'),
             NewChannelPopup: () => import('./MessagesPageComponents/NewChannelPopup.vue'),
         },
+        props: {
+            userInput: Object
+        },
         data: () => ({
             moment: moment,
             channels: {},
@@ -138,7 +141,10 @@
             });
         },
         mounted() {
-            this.genName();
+            // this.genName();
+            console.log("USER INPUT:");
+            console.log(this.userInput);
+            this.currentUser = this.userInput;
             const self = this;
             socket.onopen = () => {
                 this.socketConnected = true;

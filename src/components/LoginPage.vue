@@ -25,6 +25,7 @@
         },
         methods: {
             loginUser () {
+                const self = this;
                 xhr({
                     method: "post",
                     body: JSON.stringify({
@@ -38,10 +39,13 @@
                     }
                 }, (err, resp, body) => {
                     if (err) throw err;
-                    if (resp.statusCode !== 200) {
-                        console.log(`ERROR: ${resp.statusCode}`);
-                    }
-                    localStorage.setItem("seshkey", body);
+                    console.log(`LOGIN STATUS: ${resp.statusCode}`);
+                    body = JSON.parse(body);
+                    console.log(body);
+                    localStorage.setItem("username", self.username);
+                    localStorage.setItem("password", self.password);
+                    localStorage.setItem("usernum", body.usernum);
+                    localStorage.setItem("seshkey", body.seshkey);
                 })
             },
             createUser () {
