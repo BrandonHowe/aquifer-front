@@ -20,7 +20,8 @@
     "vue-router": "^3.1.6",
     "vue-socket.io": "^3.0.7",
     "webpack": "^4.42.0",
-    "ws-heartbeat": "^1.1.0"
+    "ws-heartbeat": "^1.1.0",
+    "xhr": "^2.5.0"
   },
   "devDependencies": {
     "@types/node": "^13.9.1",

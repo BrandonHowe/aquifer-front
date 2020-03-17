@@ -25,6 +25,7 @@ module.exports = {
     resolve: {
         alias: {
             'vue$': 'vue/dist/vue.esm.js',
+            "request$": "xhr",
         },
         extensions: [ '.tsx', '.ts', '.js'],
     },
