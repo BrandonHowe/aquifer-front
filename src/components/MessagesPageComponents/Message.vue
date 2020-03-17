@@ -1,7 +1,7 @@
 <template>
     <div class="message">
         <p><span class="message-username">{{user.username}}</span> <span class="message-date">{{formattedTime}}</span></p>
-        <p class="message-content">{{message}}</p>
+        <p class="message-content"><span v-html="formattedMsg"></span></p>
     </div>
 </template>
 
@@ -19,6 +19,19 @@
         computed: {
             formattedTime () {
                 return moment(this.utcTime).calendar();
+            },
+            formattedMsg () {
+                const boldParsedMsg = this.message.replace(/(\*\*)[^*\n]+(\*\*)/g, x => {
+                    const bareMessage = x.match(/[^*]/g).join("");
+                    return "<strong>" + bareMessage + "</strong>";
+                });
+                const italicsParsedMsg = boldParsedMsg.replace(/(\*)[^*\n]+(\*)/g, x => {
+                    const bareMessage = x.match(/[^*]/g).join("");
+                    return "<em>" + bareMessage + "</em>";
+                });
+                return italicsParsedMsg.replace(/(http:\/\/|https:\/\/)[^ ]*/g, x => {
+                    return "<a target=\"_blank\" href=" + x + ">" + x + "</a>";
+                });
             }
         }
         // data: () => ({
