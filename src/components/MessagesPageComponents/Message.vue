@@ -29,7 +29,7 @@
                     const bareMessage = x.match(/[^*]/g).join("");
                     return "<em>" + bareMessage + "</em>";
                 });
-                return italicsParsedMsg.replace(/(http:\/\/|https:\/\/)[^ ]*/g, x => {
+                return italicsParsedMsg.replace(/(http:\/\/|https:\/\/)[^ <>]*/g, x => {
                     return "<a target=\"_blank\" href=" + x + ">" + x + "</a>";
                 });
             }
