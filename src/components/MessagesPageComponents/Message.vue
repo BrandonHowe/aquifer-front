@@ -2,19 +2,29 @@
     <div class="message">
         <p><span class="message-username">{{user.username}}</span> <span class="message-date">{{formattedTime}}</span></p>
         <p class="message-content"><span v-html="formattedMsg"></span></p>
+        <LinkPrevue v-for="link in previewLinks" :key="link" :url="link"></LinkPrevue>
     </div>
 </template>
 
 <script>
     import '../../assets/colorVars.css';
     import moment from 'moment';
+    import LinkPrevue from 'link-prevue';
 
     export default {
         name: "Message",
+        components: {
+            LinkPrevue
+        },
         props: {
             user: Object,
             utcTime: Number,
             message: String
+        },
+        data () {
+            return {
+                previewLinks: [],
+            }
         },
         computed: {
             formattedTime () {
@@ -29,7 +39,21 @@
                     const bareMessage = x.match(/[^*]/g).join("");
                     return "<em>" + bareMessage + "</em>";
                 });
-                return italicsParsedMsg.replace(/(http:\/\/|https:\/\/)[^ <>]*/g, x => {
+                const underlineParsedMsg = italicsParsedMsg.replace(/(__)[^*\n]+(__)/g, x => {
+                    // eslint-disable-next-line
+                    const bareMessage = x.match(/[^\_]/g).join("");
+                    return "<span style=\"text-decoration: underline;\">" + bareMessage + "</span>";
+                });
+                const strikethruParsedMsg = underlineParsedMsg.replace(/(~~)[^*\n]+(~~)/g, x => {
+                    const bareMessage = x.match(/[^~]/g).join("");
+                    return "<del>" + bareMessage + "</del>";
+                });
+                const codeParsedMsg = strikethruParsedMsg.replace(/(`)[^*\n]+(`)/g, x => {
+                    const bareMessage = x.match(/[^`]/g).join("");
+                    return "<code style=\"background-color: var(--aquifer-text-dark-2);\">" + bareMessage + "</code>";
+                });
+                return codeParsedMsg.replace(/(http:\/\/|https:\/\/)[^ <>]*/g, x => {
+                    this.previewLinks.push(x);
                     return "<a target=\"_blank\" href=" + x + ">" + x + "</a>";
                 });
             }
