@@ -22,7 +22,7 @@
 <script>
     import '@coreui/icons';
     import '../../assets/colorVars.css';
-    import {config} from "../../assets/colorVars.css";
+    import {config} from "../../assets/config.js";
 
     export default {
         name: "NewChannelPopup",
