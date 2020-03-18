@@ -1,5 +1,5 @@
 <template>
-    <MessagesPage :userInput="currentUser"></MessagesPage>
+    <MessagesPage :userInput="currentUser" v-if="loaded"></MessagesPage>
 </template>
 
 <script>
@@ -15,6 +15,7 @@
             return {
                 authenticated: false,
                 currentUser: {},
+                loaded: false,
             }
         },
         mounted() {
@@ -31,7 +32,6 @@
                         "Access-Control-Allow-Origin": "<origin> | *"
                     }
                 }, (err, resp, body) => {
-                    // TODO: don't render messagespage until we finish this function
                     if (err) throw err;
                     console.log(`STATUS: ${resp.statusCode}`);
                     body = JSON.parse(body);
@@ -42,6 +42,7 @@
                         messages: body.messages
                     };
                     self.currentUser = currentUser;
+                    self.loaded = true;
                     console.log(currentUser);
                 })
             } else {
