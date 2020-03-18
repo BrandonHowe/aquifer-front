@@ -46,7 +46,7 @@
                     console.log(currentUser);
                 })
             } else {
-                window.location.href = "/login";
+                this.$router.replace("/login");
             }
         }
     }

@@ -4,8 +4,9 @@
             <h2 class="loginHeader">Log in</h2>
             <input class="loginInput" v-model="username" type="text" placeholder="Username..."/>
             <input class="loginInput" v-model="password" type="password" placeholder="Password..."/>
-            <div class="loginSubmit" v-on:click="loginUser">Login</div>
+            <div class="loginSubmit" v-on:click="loginUser">Log in</div>
             <div class="loginSubmit" v-on:click="createUser">Create</div>
+            <div class="loginSubmit" v-on:click="logout">Logout</div>
             <div class="xhrstatus">{{xhrstatus}}</div>
         </div>
     </div>
@@ -46,6 +47,7 @@
                     localStorage.setItem("password", self.password);
                     localStorage.setItem("usernum", body.usernum);
                     localStorage.setItem("seshkey", body.seshkey);
+                    this.$router.replace("/");
                 })
             },
             createUser () {
@@ -70,6 +72,10 @@
                     console.log(resp);
                     self.xhrstatus = body;
                 });
+            },
+            logout () {
+                localStorage.removeItem("seshkey");
+                this.xhrstatus = "Logout successful.";
             }
         }
     }
@@ -111,8 +117,8 @@
         color: var(--aquifer-text-dark-2);
     }
     .loginSubmit {
-        width: 40%;
-        margin: 4%;
+        width: 25%;
+        margin: 5% 2.5% 2.5% 2.5%;
         height: 40px;
         line-height: 40px;
         border: 3px var(--aquifer-light-1) solid;

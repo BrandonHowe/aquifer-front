@@ -80,14 +80,10 @@
 
     import { setWsHeartbeat } from "ws-heartbeat/client";
     // PRODUCTION
-    const socket = new WebSocket("wss://aquifer-social.herokuapp.com");
+    // const socket = new WebSocket("wss://aquifer-social.herokuapp.com");
     // DEV
-    // const socket = new WebSocket("ws://localhost:5000");
 
-    setWsHeartbeat(socket, '{"kind":"ping"}', {
-        pingTimeout: 60000, // in 60 seconds, if no message accepted from server, close the connection.
-        pingInterval: 25000, // every 25 seconds, send a ping message to the server.
-    });
+
 
     export default {
         name: 'MessagesPage',
@@ -134,6 +130,7 @@
             messages: [],
             socketConnected: false,
             pingTimeout: null,
+            socket: new WebSocket("ws://localhost:5000")
         }),
         created() {
             window.addEventListener("beforeunload", () => {
@@ -142,28 +139,33 @@
         },
         mounted() {
             // this.genName();
-            console.log("USER INPUT:");
-            console.log(this.userInput);
             this.currentUser = this.userInput;
             const self = this;
-            socket.onopen = () => {
-                this.socketConnected = true;
-                socket.send(JSON.stringify(["queryMessages", "query"]));
-                socket.send(JSON.stringify(["queryChannels", "query"]));
-                socket.send(JSON.stringify(["newUser", self.currentUser]));
+            console.log(`Mounted|${isOpen(this.socket)}`);
+            console.log(this.socket);
+            setWsHeartbeat(this.socket, '{"kind":"ping"}', {
+                pingTimeout: 60000, // in 60 seconds, if no message accepted from server, close the connection.
+                pingInterval: 25000, // every 25 seconds, send a ping message to the server.
+            });
+            this.socket.onopen = function (event) {
+                console.log("connected");
+                self.socketConnected = true;
+                self.sendSocket("queryMessages", "query");
+                self.sendSocket("queryChannels", "query");
+                self.sendSocket("newUser", self.currentUser);
             };
-            socket.onclose = () => {
-                socket.send(JSON.stringify(["loseUser", self.currentUser]));
-                this.socketConnected = false;
+            this.socket.onclose = () => {
+                self.sendSocket("loseUser", self.currentUser);
+                self.socketConnected = false;
                 clearTimeout(this.pingTimeout);
             };
-            socket.onmessage = (data) => {
+            this.socket.onmessage = (data) => {
                 if (data.data !== '{"kind":"pong"}') {
                     const [category, message] = JSON.parse(data.data);
                     if (category === "message") {
                         const messagesElement = document.getElementById("messages");
                         const isScrolledToBottom = messagesElement.scrollTop + messagesElement.clientHeight <= messagesElement.scrollHeight + 1;
-                        socket.send(JSON.stringify(["queryMessages", "query"]));
+                        this.sendSocket("queryMessages", "query");
                         setImmediate(() => {
                             const newmessagesElement = document.getElementById("messages");
                             if (isScrolledToBottom) {
@@ -196,7 +198,9 @@
                         this.channels = message;
                     }
                     if (category === "newUser") {
-                        this.userList = message;
+                        console.log("New user:");
+                        console.log(message);
+                        Vue.set(this.userList, message.id, message);
                     }
                     if (category === "loseUser") {
                         this.userList = message;
@@ -231,7 +235,7 @@
                             message: message,
                             channel: this.currentUser.currentChannel,
                         };
-                        socket.send(JSON.stringify(["message", newMessage]));
+                        this.sendSocket("message", newMessage);
                     } else {
                         const newMessage = {
                             msg: document.getElementById("sendMessage").value,
@@ -239,16 +243,16 @@
                         };
                         this.editing = false;
                         document.getElementById("sendMessage").value = "";
-                        socket.send(JSON.stringify(["editMessage", newMessage]));
+                        this.sendSocket("editMEssage", newMessage);
                     }
                 }
             },
             changeChannel(currentChannel) {
                 Vue.set(this.currentUser, "currentChannel", currentChannel);
-                socket.send(JSON.stringify(["changedSelection", currentChannel]));
+                this.sendSocket("changedSelection", currentChannel);
             },
             closeWebsocket() {
-                socket.send(JSON.stringify(["loseUser", this.currentUser]));
+                this.sendSocket("loseUser", this.currentUser);
                 this.socketConnected = false;
             },
             editMessage(messageId) {
@@ -262,10 +266,10 @@
             },
             deleteChannel(channelId) {
                 this.changeChannel(0);
-                socket.send(JSON.stringify(["deleteChannel", channelId]));
+                this.sendSocket("deleteChannel", channelId);
             },
             deleteMessage(messageId) {
-                socket.send(JSON.stringify(["deleteMessage", messageId]));
+                this.sendSocket("deleteMessage", messageId);
             },
             closeModal(whichOne) {
                 if (whichOne === "msg") {
@@ -324,6 +328,10 @@
                         formatter: (word) => this.capitalizeFLetter(word)
                     }).join("");
                 }
+            },
+            sendSocket(category, data) {
+                const seshkey = localStorage.getItem("seshkey");
+                this.socket.send(JSON.stringify([category, seshkey, data]));
             }
         }
     }
