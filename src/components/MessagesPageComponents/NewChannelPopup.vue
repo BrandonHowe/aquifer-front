@@ -22,21 +22,18 @@
 <script>
     import '@coreui/icons';
     import '../../assets/colorVars.css';
-
-    // PRODUCTION
-    // const socket = new WebSocket("wss://aquifer-social.herokuapp.com");
-    // DEV
-    const socket = new WebSocket("ws://localhost:5000");
+    import {config} from "../../assets/colorVars.css";
 
     export default {
         name: "NewChannelPopup",
         data: () => ({
             clickingMain: false,
             channelName: "",
+            socket: new WebSocket(config.wsUrl)
         }),
         methods: {
             createChannel() {
-                socket.send(JSON.stringify(["newChannel", {name: this.channelName}]));
+                this.socket.send(JSON.stringify(["newChannel", localStorage.getItem("seshkey"), {name: this.channelName}]));
                 this.clickingMain = false;
                 this.$emit("closeModal");
             },

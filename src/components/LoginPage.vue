@@ -2,7 +2,10 @@
     <div class="loginPage">
         <div class="loginBox">
             <h2 class="loginHeader">Log in</h2>
-            <input class="loginInput" v-model="username" type="text" placeholder="Username..."/>
+            <div class="usernameInputs">
+                <input class="loginUsername" v-model="username" type="text" placeholder="Username..."/>
+                <input class="loginUsernum" v-model="usernum" type="text" placeholder="Usernum..."/>
+            </div>
             <input class="loginInput" v-model="password" type="password" placeholder="Password..."/>
             <div class="loginSubmit" v-on:click="loginUser">Log in</div>
             <div class="loginSubmit" v-on:click="createUser">Create</div>
@@ -20,6 +23,7 @@
         data () {
             return {
                 username: "",
+                usernum: "",
                 password: "",
                 xhrstatus: ""
             }
@@ -31,6 +35,7 @@
                     method: "post",
                     body: JSON.stringify({
                         username: this.username,
+                        usernum: this.usernum,
                         password: this.password
                     }),
                     uri: "http://localhost:5000/login",
@@ -56,6 +61,7 @@
                     method: "post",
                     body: JSON.stringify({
                         username: this.username,
+                        usernum: this.usernum,
                         password: this.password
                     }),
                     uri: "http://localhost:5000/createUser",
@@ -74,8 +80,26 @@
                 });
             },
             logout () {
-                localStorage.removeItem("seshkey");
-                this.xhrstatus = "Logout successful.";
+                const self = this;
+                xhr({
+                    method: "post",
+                    body: JSON.stringify({
+                        seshkey: localStorage.getItem("seshkey"),
+                    }),
+                    uri: "http://localhost:5000/logout",
+                    useXDR: true,
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Access-Control-Allow-Origin": "*",
+                    }
+                }, (err, resp) => {
+                    if (err) throw err;
+                    if (resp.statusCode !== 200) {
+                        console.log(resp.statusCode);
+                    }
+                    localStorage.removeItem("seshkey");
+                    self.xhrstatus = "Logout successful.";
+                });
             }
         }
     }
@@ -106,8 +130,8 @@
         margin: 0;
     }
     .loginInput {
-        margin-top: 5%;
-        width: calc(100% - 20px);
+        margin: 5% 0 0 5%;
+        width: calc(82%);
         height: 30px;
         padding: 10px;
         font-size: 24px;
@@ -116,8 +140,34 @@
         border-radius: 5px;
         color: var(--aquifer-text-dark-2);
     }
+    .loginUsername {
+        margin: 5% 5% 0 0;
+        width: calc(60%);
+        height: 30px;
+        padding: 2%;
+        font-size: 24px;
+        background-color: var(--aquifer-light-1);
+        border: 3px var(--aquifer-light-2) solid;
+        border-radius: 5px;
+        color: var(--aquifer-text-dark-2);
+    }
+    .loginUsernum {
+        margin-top: 5%;
+        width: calc(20%);
+        height: 30px;
+        padding: 2%;
+        font-size: 24px;
+        background-color: var(--aquifer-light-1);
+        border: 3px var(--aquifer-light-2) solid;
+        border-radius: 5px;
+        color: var(--aquifer-text-dark-2);
+    }
+    .usernameInputs {
+        margin: auto;
+        width: 90%;
+    }
     .loginSubmit {
-        width: 25%;
+        width: 26%;
         margin: 5% 2.5% 2.5% 2.5%;
         height: 40px;
         line-height: 40px;

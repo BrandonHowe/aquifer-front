@@ -74,16 +74,13 @@
     import moment from 'moment';
     import * as randomWords from "random-words";
 
+    import {config} from "../assets/config.js";
+
     import "../assets/colorVars.css";
 
     const isOpen = ws => ws.readyState === ws.OPEN;
 
     import { setWsHeartbeat } from "ws-heartbeat/client";
-    // PRODUCTION
-    // const socket = new WebSocket("wss://aquifer-social.herokuapp.com");
-    // DEV
-
-
 
     export default {
         name: 'MessagesPage',
@@ -130,7 +127,7 @@
             messages: [],
             socketConnected: false,
             pingTimeout: null,
-            socket: new WebSocket("ws://localhost:5000")
+            socket: new WebSocket(config.wsUrl)
         }),
         created() {
             window.addEventListener("beforeunload", () => {
@@ -197,8 +194,13 @@
                     if (category === "newUser") {
                         Vue.set(this.userList, message.id, message);
                     }
+                    if (category === "kickUser") {
+                        if (message.username === localStorage.getItem("username") && message.usernum === localStorage.getItem("usernum")) {
+                            this.$router.push("/login");
+                        }
+                    }
                     if (category === "loseUser") {
-                        this.userList = message;
+                        Vue.set(this.userList, message, undefined);
                     }
                     if (category === "bestowId") {
                         this.currentUser.id = message;
@@ -238,7 +240,7 @@
                         };
                         this.editing = false;
                         document.getElementById("sendMessage").value = "";
-                        this.sendSocket("editMEssage", newMessage);
+                        this.sendSocket("editMessage", newMessage);
                     }
                 }
             },
@@ -297,7 +299,7 @@
                         modalOpen: true,
                         user: {
                             username: message.user.username,
-                            usernum: message.user.userNum,
+                            usernum: message.user.usernum,
                         },
                         date: message.utcTime,
                         message: message.message,
