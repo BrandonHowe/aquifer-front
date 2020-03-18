@@ -25,7 +25,7 @@ export default new Router({
             component: LoginPage,
         },
         {
-            path: "/user/:user",
+            path: "/user/:username/:usernum",
             name: "User Profile",
             component: UserPage,
             props: true

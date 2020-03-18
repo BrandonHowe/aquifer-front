@@ -1,7 +1,7 @@
 <template>
     <div class="userPage">
         <div class="userNameDiv">
-            <h1 class="userName">{{ user }}</h1>
+            <h1 class="userName">{{ username }}<span class="usernum">#{{ usernum }}</span></h1>
             <div class="userUnderline"></div>
         </div>
     </div>
@@ -12,7 +12,8 @@
     export default {
         name: "UserPage",
         props: {
-            user: String,
+            username: String,
+            usernum: String
         }
     }
 </script>
@@ -48,5 +49,10 @@
         background-color: var(--aquifer-light-2);
         border-radius: 10px;
         height: 10px;
+    }
+
+    .usernum {
+        color: #68a;
+        font-size: 24px;
     }
 </style>
