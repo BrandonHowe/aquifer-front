@@ -141,14 +141,11 @@
             // this.genName();
             this.currentUser = this.userInput;
             const self = this;
-            console.log(`Mounted|${isOpen(this.socket)}`);
-            console.log(this.socket);
             setWsHeartbeat(this.socket, '{"kind":"ping"}', {
                 pingTimeout: 60000, // in 60 seconds, if no message accepted from server, close the connection.
                 pingInterval: 25000, // every 25 seconds, send a ping message to the server.
             });
             this.socket.onopen = () => {
-                console.log("connected");
                 self.socketConnected = true;
                 self.sendSocket("queryMessages", "query");
                 self.sendSocket("queryChannels", "query");
@@ -198,8 +195,6 @@
                         this.channels = message;
                     }
                     if (category === "newUser") {
-                        console.log("New user:");
-                        console.log(message);
                         Vue.set(this.userList, message.id, message);
                     }
                     if (category === "loseUser") {
