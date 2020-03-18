@@ -147,7 +147,7 @@
                 pingTimeout: 60000, // in 60 seconds, if no message accepted from server, close the connection.
                 pingInterval: 25000, // every 25 seconds, send a ping message to the server.
             });
-            this.socket.onopen = function (event) {
+            this.socket.onopen = () => {
                 console.log("connected");
                 self.socketConnected = true;
                 self.sendSocket("queryMessages", "query");
