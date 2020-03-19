@@ -1,6 +1,15 @@
 <template>
     <div class="channelList">
-        <Channel v-for="channel in channels" :key="channel.id" :channelName="channel.name" v-on:click.native="oneClick(channel.id)" v-bind:class="{coloredBackground: channel.id === currentlySelected, channelHover: channel.id !== currentlySelected}"></Channel>
+        <Channel
+            v-for="channel in channels"
+            :key="channel.id"
+            :channelName="channel.name"
+            v-on:click.native="oneClick(channel.id)"
+            v-bind:class="{
+                coloredBackground: channel.id === currentlySelected,
+                channelHover: channel.id !== currentlySelected
+            }"
+        ></Channel>
         <div id="newChannel" @click="newChannel">
             New Channel
         </div>
