@@ -3,7 +3,10 @@
         <div class="userNameDiv">
             <h1 class="userName">{{ username }}<span class="usernum">#{{ usernum }}</span></h1>
             <div class="userUnderline"></div>
-            <p>Status: {{online}}</p>
+        </div>
+        <div class="infoDiv">
+            <p>Status: {{ online }}</p>
+            <p>User ID: {{ id }}</p>
         </div>
     </div>
 </template>
@@ -21,7 +24,9 @@
         },
         data() {
             return {
-                online: false,
+                online: "offline",
+                id: 0,
+                socket: new WebSocket(config.wsUrl)
             }
         },
         methods: {
@@ -44,15 +49,55 @@
                     });
                 })
             },
+            async checkIdPromise(username, usernum) {
+                return new Promise((resolve) => {
+                    xhr({
+                        method: "get",
+                        uri: config.serverUrl + "/userId/" + username + "/" + usernum,
+                        useXDR: true,
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Access-Control-Allow-Origin": "*",
+                        }
+                    }, (err, resp, body) => {
+                        if (err) throw err;
+                        if (resp.statusCode !== 200) {
+                            console.log(resp.statusCode);
+                        }
+                        resolve(body);
+                    });
+                })
+            },
             async checkStatus() {
                 const username = localStorage.getItem("username");
                 const usernum = Number(localStorage.getItem("usernum"));
                 return await this.checkStatusPromise(username, usernum);
             },
+            async checkId() {
+                const username = localStorage.getItem("username");
+                const usernum = Number(localStorage.getItem("usernum"));
+                return await this.checkIdPromise(username, usernum);
+            },
         },
-        // TODO: make online property real-time
         async mounted() {
             this.online = await this.checkStatus();
+            this.id = await this.checkId();
+            const self = this;
+            this.socket.onmessage = (data) => {
+                if (data.data !== '{"kind":"pong"}') {
+                    const [category, message] = JSON.parse(data.data);
+                    if (category === "newUser") {
+                        if (Number(message.id) === Number(self.id)) {
+                            self.online = "online";
+                        }
+                    }
+                    if (category === "loseUser") {
+                        if (Number(message) === Number(self.id)) {
+                            self.online = "offline";
+                        }
+                    }
+                }
+            }
         }
     }
 </script>
@@ -93,5 +138,12 @@
     .usernum {
         color: #68a;
         font-size: 24px;
+    }
+
+    .infoDiv {
+        position: absolute;
+        top: 15%;
+        left: 5%;
+        text-align: left;
     }
 </style>
