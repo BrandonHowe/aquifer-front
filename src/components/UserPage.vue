@@ -16,6 +16,7 @@
     import "../assets/colorVars.css";
     import {config} from "../assets/config.js";
     import xhr from "xhr";
+    import {setWsHeartbeat} from "ws-heartbeat/client";
 
     export default {
         name: "UserPage",
@@ -76,13 +77,26 @@
             },
         },
         async mounted() {
+            setWsHeartbeat(this.socket, '{"kind":"ping"}', {
+                pingTimeout: 60000, // in 60 seconds, if no message accepted from server, close the connection.
+                pingInterval: 25000, // every 25 seconds, send a ping message to the server.
+            });
             this.online = await this.checkStatus();
             this.id = await this.checkId();
             this.messageCount = await this.checkMessageCount();
             const self = this;
-            this.socket.onmessage = (data) => {
+            this.socket.onmessage = async (data) => {
                 if (data.data !== '{"kind":"pong"}') {
                     const [category, message] = JSON.parse(data.data);
+                    if (category === "message") {
+                        if (+self.id === +message.user.id) {
+                            self.messageCount++;
+                        }
+                    }
+                    if (category === "deleteMessage" || category === "deleteChannel") {
+                        self.messageCount = await self.checkMessageCount();
+                        self.messageCount = await self.checkMessageCount();
+                    }
                     if (category === "newUser") {
                         if (Number(message.id) === Number(self.id)) {
                             self.online = "online";
