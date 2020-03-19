@@ -16,7 +16,7 @@
              }"
         >
             <router-link
-                to="/about"
+                :to="'/user/' + currentUser.username + '/' + currentUser.userNum"
                 class="profileRouterLink"
             >
                 {{currentUser.username}}#{{currentUser.userNum}}

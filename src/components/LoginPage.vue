@@ -1,15 +1,19 @@
 <template>
     <div class="loginPage">
         <div class="loginBox">
-            <h2 class="loginHeader">Log in</h2>
-            <div class="usernameInputs">
-                <input class="loginUsername" v-model="username" type="text" placeholder="Username..."/>
-                <input class="loginUsernum" v-model="usernum" type="text" placeholder="Usernum..."/>
+            <div class="loginHeaders">
+                <LoginHeader @changeSelected="changeSelected('login')" name="Login"></LoginHeader>
+                <LoginHeader @changeSelected="changeSelected('create')" name="Create"></LoginHeader>
+                <LoginHeader @changeSelected="changeSelected('logout')" name="Logout"></LoginHeader>
             </div>
-            <input class="loginInput" v-model="password" type="password" placeholder="Password..."/>
-            <div class="loginSubmit" v-on:click="loginUser">Log in</div>
-            <div class="loginSubmit" v-on:click="createUser">Create</div>
-            <div class="loginSubmit" v-on:click="logout">Logout</div>
+            <div class="usernameInputs">
+                <input v-if="selected !== 'logout'" :style="[selected === 'login' ? {'width': '60%'} : {'width': '92%'}]" class="loginUsername" v-model="username" type="text" placeholder="Username..."/>
+                <input v-if="selected === 'login'" class="loginUsernum" v-model="usernum" type="text" placeholder="Usernum..."/>
+            </div>
+            <input v-if="selected !== 'logout'" class="loginInput" v-model="password" type="password" placeholder="Password..."/>
+            <div v-if="selected === 'login'"  class="loginSubmit" v-on:click="loginUser">Log in</div>
+            <div v-if="selected === 'create'" class="loginSubmit" v-on:click="createUser">Create</div>
+            <div v-if="selected === 'logout'" class="loginSubmit" v-on:click="logout">Logout</div>
             <div class="xhrstatus">{{xhrstatus}}</div>
         </div>
     </div>
@@ -18,17 +22,25 @@
 <script>
     import '../assets/colorVars.css';
     import xhr from "xhr";
+    import LoginHeader from "./LoginPageComponents/LoginHeader.vue";
     export default {
         name: "LoginPage",
+        components: {
+            LoginHeader
+        },
         data () {
             return {
                 username: "",
                 usernum: "",
                 password: "",
-                xhrstatus: ""
+                xhrstatus: "",
+                selected: "login",
             }
         },
         methods: {
+            changeSelected(arg) {
+                this.selected = arg;
+            },
             loginUser () {
                 const self = this;
                 xhr({
@@ -114,20 +126,21 @@
     }
     .loginBox {
         width: 50%;
-        height: 40%;
+        height: 45%;
         padding: 5%;
         border-radius: 10px;
         position: relative;
         left: 20%;
-        top: 25%;
+        top: 22.5%;
         background-color: var(--aquifer-dark-3);
         color: azure;
         text-align: left;
         font-family: Montserrat, 'Open Sans',  sans-serif;
     }
-    .loginHeader {
-        font-size: 48px;
-        margin: 0;
+    .loginHeaders {
+        display: flex;
+        flex-wrap: nowrap;
+        justify-content: center;
     }
     .loginInput {
         margin: 5% 0 0 5%;
@@ -142,7 +155,6 @@
     }
     .loginUsername {
         margin: 5% 5% 0 0;
-        width: calc(60%);
         height: 30px;
         padding: 2%;
         font-size: 24px;
@@ -153,7 +165,7 @@
     }
     .loginUsernum {
         margin-top: 5%;
-        width: calc(20%);
+        width: 20%;
         height: 30px;
         padding: 2%;
         font-size: 24px;
@@ -167,7 +179,7 @@
         width: 90%;
     }
     .loginSubmit {
-        width: 26%;
+        width: 90%;
         margin: 5% 2.5% 2.5% 2.5%;
         height: 40px;
         line-height: 40px;
