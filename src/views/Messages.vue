@@ -39,7 +39,8 @@
                         username: localStorage.getItem("username"),
                         userNum: localStorage.getItem("usernum"),
                         currentChannel: body.currentchannel,
-                        messages: body.messages
+                        messages: body.messages,
+                        currentServer: body.currentserver
                     };
                     self.currentUser = currentUser;
                     self.loaded = true;

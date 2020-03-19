@@ -1,8 +1,8 @@
 <template>
     <div id="messagesPage">
-        <div id="servers">
-
-        </div>
+        <ServerList
+            :servers="servers"
+        ></ServerList>
         <ChannelList
             :channels="channels"
             @changedSelection="changeChannel"
@@ -91,6 +91,7 @@
             ChannelList: () => import('./MessagesPageComponents/ChannelList.vue'),
             MsgPopup: () => import('./MessagesPageComponents/MsgPopup.vue'),
             UserList: () => import('./MessagesPageComponents/UserList.vue'),
+            ServerList: () => import('./MessagesPageComponents/ServerList.vue'),
             NewChannelPopup: () => import('./MessagesPageComponents/NewChannelPopup.vue'),
         },
         props: {
@@ -99,6 +100,7 @@
         data: () => ({
             moment: moment,
             channels: {},
+            servers: {},
             msgModalDetails: {
                 modalOpen: false,
                 user: null,
@@ -118,6 +120,7 @@
                 userNum: 1234,
                 currentChannel: 0,
                 messages: [],
+                currentServer: 1,
             },
             userList: {},
             editing: false,
@@ -144,8 +147,9 @@
             });
             this.socket.onopen = () => {
                 self.socketConnected = true;
-                self.sendSocket("queryMessages", "query");
-                self.sendSocket("queryChannels", "query");
+                self.sendSocket("queryMessages", self.currentUser.currentChannel);
+                self.sendSocket("queryChannels", self.currentUser.currentServer);
+                self.sendSocket("queryServers", "query");
                 self.sendSocket("newUser", self.currentUser);
             };
             this.socket.onclose = () => {
@@ -159,7 +163,7 @@
                     if (category === "message") {
                         const messagesElement = document.getElementById("messages");
                         const isScrolledToBottom = messagesElement.scrollTop + messagesElement.clientHeight <= messagesElement.scrollHeight + 1;
-                        this.sendSocket("queryMessages", "query");
+                        this.sendSocket("queryMessages", self.currentUser.currentChannel);
                         setImmediate(() => {
                             const newmessagesElement = document.getElementById("messages");
                             if (isScrolledToBottom) {
@@ -190,6 +194,9 @@
                     }
                     if (category === "channelList") {
                         this.channels = message;
+                    }
+                    if (category === "serverList") {
+                        this.servers = message;
                     }
                     if (category === "newUser") {
                         Vue.set(this.userList, message.id, message);
@@ -247,6 +254,7 @@
             changeChannel(currentChannel) {
                 Vue.set(this.currentUser, "currentChannel", currentChannel);
                 this.sendSocket("changedSelection", currentChannel);
+                this.sendSocket("queryMessages", currentChannel);
             },
             closeWebsocket() {
                 this.sendSocket("loseUser", this.currentUser);
@@ -347,21 +355,6 @@
         left: 0;
     }
 
-    #servers {
-        grid-column: 1;
-        grid-row: 1 / 21;
-        /* background-color: #044289; */
-        background-color: var(--aquifer-dark-2);
-    }
-
-    /*#channels {*/
-    /*    grid-column: 2 / 5;*/
-    /*    grid-row: 1 / 20;*/
-    /*    background: #0f6dbf;*/
-    /*    border: solid black;*/
-    /*    border-width: 0 2px 2px 2px;*/
-    /*}*/
-
     #profileArea {
         grid-column: 2 / 5;
         grid-row: 20;
@@ -371,6 +364,7 @@
         color: white;
         font-weight: bold;
         line-height: 5vh;
+        font-size: 2.5vh;
     }
 
     #messages {
