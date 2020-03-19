@@ -26,6 +26,9 @@
 
     export default {
         name: "NewChannelPopup",
+        props: {
+            currentServer: Number,
+        },
         data: () => ({
             clickingMain: false,
             channelName: "",
@@ -33,7 +36,7 @@
         }),
         methods: {
             createChannel() {
-                this.socket.send(JSON.stringify(["newChannel", localStorage.getItem("seshkey"), {name: this.channelName}]));
+                this.socket.send(JSON.stringify(["newChannel", localStorage.getItem("seshkey"), {name: this.channelName, server: this.currentServer}]));
                 this.clickingMain = false;
                 this.$emit("closeModal");
             },

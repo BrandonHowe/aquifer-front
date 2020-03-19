@@ -2,6 +2,7 @@
     <div id="messagesPage">
         <ServerList
             :servers="servers"
+            @changedServer="changeServer"
         ></ServerList>
         <ChannelList
             :channels="channels"
@@ -55,6 +56,7 @@
         ></MsgPopup>
         <NewChannelPopup
             v-if="newChannelModalDetails.modalOpen"
+            :currentServer="currentUser.currentServer"
             @closeModal="closeModal('newChannel')"
         ></NewChannelPopup>
         <ChannelPopup
@@ -99,7 +101,7 @@
         },
         data: () => ({
             moment: moment,
-            channels: {},
+            channels: [],
             servers: {},
             msgModalDetails: {
                 modalOpen: false,
@@ -193,6 +195,7 @@
                         });
                     }
                     if (category === "channelList") {
+                        console.log(message);
                         this.channels = message;
                     }
                     if (category === "serverList") {
@@ -253,8 +256,15 @@
             },
             changeChannel(currentChannel) {
                 Vue.set(this.currentUser, "currentChannel", currentChannel);
-                this.sendSocket("changedSelection", currentChannel);
+                // this.sendSocket("changedSelection", currentChannel);
                 this.sendSocket("queryMessages", currentChannel);
+            },
+            changeServer(currentServer) {
+                console.log(`New server: ${currentServer}`);
+                Vue.set(this.currentUser, "currentServer", currentServer);
+                // this.sendSocket("changedServer", currentServer);
+                this.sendSocket("queryChannels", currentServer);
+                //TODO: make messages update upon server switch
             },
             closeWebsocket() {
                 this.sendSocket("loseUser", this.currentUser);

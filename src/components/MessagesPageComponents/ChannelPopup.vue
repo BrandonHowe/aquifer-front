@@ -18,7 +18,7 @@
     import '@coreui/icons';
     import '../../assets/colorVars.css';
 
-    // const socket = new WebSocket("ws://localhost:5000");
+    //TODO: make this work with the server update
 
     export default {
         name: "ChannelPopup",

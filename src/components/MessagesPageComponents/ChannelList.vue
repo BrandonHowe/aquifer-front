@@ -37,12 +37,11 @@ export default {
         }
     },
     props: {
-        channels: Object
+        channels: Array
     },
     methods: {
         changeSelection (channelId) {
             this.currentlySelected = channelId;
-            console.log("New channel: " + channelId);
             this.$emit("changedSelection", channelId);
             // console.log(channelName);
         },
