@@ -7,6 +7,7 @@
         <div class="infoDiv">
             <p>Status: {{ online }}</p>
             <p>User ID: {{ id }}</p>
+            <p>Message count: {{ messageCount }}</p>
         </div>
     </div>
 </template>
@@ -26,34 +27,24 @@
             return {
                 online: "offline",
                 id: 0,
+                messageCount: 0,
                 socket: new WebSocket(config.wsUrl)
             }
         },
         methods: {
-            checkStatusPromise(username, usernum) {
+            checkPromise (username, usernum, type) {
+                let url = "";
+                if (type === "status") {
+                    url = config.serverUrl + "/userStatus/" + username + "/" + usernum;
+                } else if (type === "id") {
+                    url = config.serverUrl + "/userId/" + username + "/" + usernum;
+                } else if (type === "messageCount") {
+                    url = config.serverUrl + "/userMessageCount/" + username + "/" + usernum;
+                }
                 return new Promise((resolve) => {
                     xhr({
                         method: "get",
-                        uri: config.serverUrl + "/userStatus/" + username + "/" + usernum,
-                        useXDR: true,
-                        headers: {
-                            "Content-Type": "application/json",
-                            "Access-Control-Allow-Origin": "*",
-                        }
-                    }, (err, resp, body) => {
-                        if (err) throw err;
-                        if (resp.statusCode !== 200) {
-                            console.log(resp.statusCode);
-                        }
-                        resolve(body);
-                    });
-                })
-            },
-            async checkIdPromise(username, usernum) {
-                return new Promise((resolve) => {
-                    xhr({
-                        method: "get",
-                        uri: config.serverUrl + "/userId/" + username + "/" + usernum,
+                        uri: url,
                         useXDR: true,
                         headers: {
                             "Content-Type": "application/json",
@@ -71,17 +62,23 @@
             async checkStatus() {
                 const username = localStorage.getItem("username");
                 const usernum = Number(localStorage.getItem("usernum"));
-                return await this.checkStatusPromise(username, usernum);
+                return await this.checkPromise(username, usernum, "status");
             },
             async checkId() {
                 const username = localStorage.getItem("username");
                 const usernum = Number(localStorage.getItem("usernum"));
-                return await this.checkIdPromise(username, usernum);
+                return await this.checkPromise(username, usernum, "id");
+            },
+            async checkMessageCount() {
+                const username = localStorage.getItem("username");
+                const usernum = Number(localStorage.getItem("usernum"));
+                return await this.checkPromise(username, usernum, "messageCount");
             },
         },
         async mounted() {
             this.online = await this.checkStatus();
             this.id = await this.checkId();
+            this.messageCount = await this.checkMessageCount();
             const self = this;
             this.socket.onmessage = (data) => {
                 if (data.data !== '{"kind":"pong"}') {
