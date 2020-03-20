@@ -5,7 +5,12 @@
             :key="server.id"
             :name="server.name"
             v-on:click.native="oneClick(server.id)"
-        ></Server>
+            v-bind:class="{
+                coloredBackground: server.id === currentlySelected,
+                channelHover: server.id !== currentlySelected
+            }"
+        >
+        </Server>
     </div>
 </template>
 
@@ -22,6 +27,7 @@
         },
         data() {
             return {
+                currentlySelected: 1,
                 clicks: {
                     num: 0,
                     server: 0,
@@ -31,7 +37,6 @@
         methods: {
             changeServer(serverId) {
                 this.currentlySelected = serverId;
-                console.log("New server: " + serverId);
                 this.$emit("changedServer", serverId);
                 // console.log(channelName);
             },
@@ -65,5 +70,15 @@
         grid-row: 1 / 21;
         /* background-color: #044289; */
         background-color: var(--aquifer-dark-2);
+    }
+    .channelHover {
+        background-color: var(--aquifer-medium-3);
+        transition: background-color 0.1s;
+    }
+    .channelHover:hover {
+        background-color: var(--aquifer-medium-2);
+    }
+    .coloredBackground {
+        background-color: var(--aquifer-medium-1);
     }
 </style>

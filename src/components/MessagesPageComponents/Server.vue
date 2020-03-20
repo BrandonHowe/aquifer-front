@@ -17,7 +17,7 @@
     .server {
         width: 80%;
         border-radius: 50%;
-        background-color: #459DBF;
+        /*background-color: #459DBF;*/
         padding-top: 40%;
         padding-bottom: 40%;
         margin: 10%;
@@ -26,7 +26,7 @@
         vertical-align: middle;
     }
     .server:hover {
-        background-color: #67AFCB;
+        /*background-color: #67AFCB;*/
     }
     .serverText {
         margin: 0;

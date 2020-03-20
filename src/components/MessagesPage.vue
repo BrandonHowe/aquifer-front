@@ -23,7 +23,11 @@
                 {{currentUser.username}}#{{currentUser.userNum}}
             </router-link>
         </div>
-        <div id="messages">
+        <div
+            id="messages"
+            v-bind:style="[currentUser.currentChannel > 0 ? {'background-color': 'var(--aquifer-light-1)'} : {'background-color': 'var(--aquifer-medium-4)'}]"
+        >
+            <p v-if="currentUser.currentChannel === 0" style="color: var(--aquifer-text-dark-1); font-size: 4vh; font-family: Calibri, Arial, sans-serif">You are not in any text channels.</p>
             <message-component
                 v-for="message in currentMessages()"
                 :key="message.id"
@@ -260,10 +264,10 @@
                 this.sendSocket("queryMessages", currentChannel);
             },
             changeServer(currentServer) {
-                console.log(`New server: ${currentServer}`);
                 Vue.set(this.currentUser, "currentServer", currentServer);
                 // this.sendSocket("changedServer", currentServer);
                 this.sendSocket("queryChannels", currentServer);
+                this.changeChannel(0);
                 //TODO: make messages update upon server switch
             },
             closeWebsocket() {
@@ -379,7 +383,6 @@
 
     #messages {
         /* background: #9AC1EA; */
-        background: var(--aquifer-light-1);
         grid-column: 5 / 18;
         grid-row: 1 / 20;
         border: solid black;
