@@ -4,6 +4,7 @@
             :servers="servers"
             :user="currentUser"
             @changedServer="changeServer"
+            @openNewServerModal="openNewServerModal"
         ></ServerList>
         <ChannelList
             :channels="channels"
@@ -59,6 +60,10 @@
             :message="msgModalDetails.message"
             :msgId="msgModalDetails.id"
         ></MsgPopup>
+        <NewServerPopup
+            v-if="newServerModalDetails.modalOpen"
+            @closeModal="closeModal('newServer')"
+        ></NewServerPopup>
         <NewChannelPopup
             v-if="newChannelModalDetails.modalOpen"
             :currentServer="currentUser.currentServer"
@@ -100,6 +105,7 @@
             UserList: () => import('./MessagesPageComponents/UserList.vue'),
             ServerList: () => import('./MessagesPageComponents/ServerList.vue'),
             NewChannelPopup: () => import('./MessagesPageComponents/NewChannelPopup.vue'),
+            NewServerPopup: () => import('./MessagesPageComponents/NewServerPopup.vue'),
         },
         props: {
             userInput: Object
@@ -114,6 +120,9 @@
                 date: null,
                 message: null,
                 id: null
+            },
+            newServerModalDetails: {
+                modalOpen: false
             },
             newChannelModalDetails: {
                 modalOpen: false,
@@ -226,6 +235,9 @@
                     if (category === "deleteChannel") {
                         this.channels = message;
                     }
+                    if (category === "newServer") {
+                        Vue.set(this.servers, message.id, message);
+                    }
                 }
             }
         },
@@ -295,12 +307,18 @@
                 if (whichOne === "msg") {
                     this.msgModalDetails.modalOpen = false;
                 }
+                if (whichOne === "newServer") {
+                    this.newServerModalDetails.modalOpen = false;
+                }
                 if (whichOne === "newChannel") {
                     this.newChannelModalDetails.modalOpen = false;
                 }
                 if (whichOne === "channel") {
                     this.channelModalDetails.modalOpen = false;
                 }
+            },
+            openNewServerModal() {
+                this.newServerModalDetails.modalOpen = true;
             },
             openNewChannelModal() {
                 this.newChannelModalDetails.modalOpen = true;

@@ -11,7 +11,7 @@
             }"
         >
         </Server>
-        <div v-if="userPower === 'admin'" class="addServer">
+        <div v-if="userPower === 'admin'" class="addServer" @click="newServer">
             <p class="addServerText">+</p>
         </div>
     </div>
@@ -90,6 +90,9 @@
                     }
                 }
             },
+            newServer() {
+                this.$emit("openNewServerModal");
+            }
         }
     }
 </script>
@@ -124,6 +127,7 @@
         bottom: 0;
         font-size: 4vh;
         line-height: calc(100%);
+        user-select: none;
     }
     .channelHover {
         background-color: var(--aquifer-medium-3);

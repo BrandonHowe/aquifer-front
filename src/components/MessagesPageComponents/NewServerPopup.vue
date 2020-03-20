@@ -1,18 +1,18 @@
 <template>
-    <div class="newServerPopup" id="newChannelPopup" @click="closeModal('reg')">
-        <div class="newChannelPopup-content" @click="clickingMain = true">
+    <div class="newServerPopup" id="newServerPopup" @click="closeModal('reg')">
+        <div class="newServerPopup-content" @click="clickingMain = true">
             <span class="close" @click="closeModal('x')">&times;</span>
-            <div class="newChannelPopup-header">
-                <h3>Create a new channel</h3>
+            <div class="newServerPopup-header">
+                <h3>Create a new server</h3>
             </div>
-            <div class="newChannelPopup-actions">
+            <div class="newServerPopup-actions">
                 <input
                     v-model="channelName"
-                    class="newChannelPopupInput"
+                    class="newServerPopupInput"
                 />
                 <div
                     @click="createChannel()"
-                    class="newChannelPopupCreate"
+                    class="newServerPopupCreate"
                 >Create!</div>
             </div>
         </div>
@@ -25,10 +25,7 @@
     import {config} from "../../assets/config.js";
 
     export default {
-        name: "NewChannelPopup",
-        props: {
-            currentServer: Number,
-        },
+        name: "NewServerPopup",
         data: () => ({
             clickingMain: false,
             channelName: "",
@@ -36,7 +33,7 @@
         }),
         methods: {
             createChannel() {
-                this.socket.send(JSON.stringify(["newChannel", localStorage.getItem("seshkey"), {name: this.channelName, server: this.currentServer}]));
+                this.socket.send(JSON.stringify(["newServer", localStorage.getItem("seshkey"), {name: this.channelName, server: this.currentServer}]));
                 this.clickingMain = false;
                 this.$emit("closeModal");
             },
@@ -73,7 +70,7 @@
         color: #0B3241;
         /* Black w/ opacity */
     }
-    .newChannelPopup-content {
+    .newServerPopup-content {
         background-color: var(--aquifer-medium-4);
         margin: 10% auto;
         /* 15% from the top and centered */
@@ -96,14 +93,14 @@
         text-decoration: none;
         cursor: pointer;
     }
-    .newChannelPopupInput {
+    .newServerPopupInput {
         background-color: var(--aquifer-light-1);
         width: 80%;
         padding: 1% 5% 1% 5%;
         margin-left: 5%;
         height: 25px;
     }
-    .newChannelPopupCreate {
+    .newServerPopupCreate {
         width: calc(20% - 10px);
         height: 40px;
         line-height: 40px;
