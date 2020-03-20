@@ -5,9 +5,9 @@
             :key="server.id"
             :name="server.name"
             v-on:click.native="oneClick(server.id)"
+            class="channelHover"
             v-bind:class="{
                 coloredBackground: server.id === currentlySelected,
-                channelHover: server.id !== currentlySelected
             }"
         >
         </Server>
@@ -83,8 +83,8 @@
                 } else {
                     if (newServerId === this.clicks.server) {
                         clearTimeout(this.timer);
-                        const selectedChannel = this.channels[this.currentlySelected];
-                        this.$emit("openChannelModal", selectedChannel);
+                        const selectedServer = this.servers[this.currentlySelected];
+                        this.$emit("openServerModal", selectedServer);
                         // console.log(this.modalDetails);
                         this.clicks.num = 0;
                     }
@@ -106,7 +106,8 @@
     }
     .addServer {
         width: 80%;
-        border-radius: 50%;
+        border-radius: 1000px;
+        /*background-color: #459DBF;*/
         padding-top: 40%;
         padding-bottom: 40%;
         margin: 10%;
@@ -114,6 +115,7 @@
         display: inline-block;
         vertical-align: middle;
         background-color: var(--aquifer-medium-3);
+        transition: width 0.5s, background-color 0.3s;
     }
     .addServer:hover {
         background-color: var(--aquifer-medium-2);
@@ -121,13 +123,15 @@
     .addServerText {
         margin: 0;
         position: absolute;
-        top: 15%;
+        top: 20%;
         left: 0;
         right: 0;
         bottom: 0;
-        font-size: 4vh;
+        font-size: 2.5vw;
         line-height: calc(100%);
         user-select: none;
+        border-radius: 1000px;
+        z-index: 1;
     }
     .channelHover {
         background-color: var(--aquifer-medium-3);

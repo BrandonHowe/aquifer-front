@@ -5,6 +5,7 @@
             :user="currentUser"
             @changedServer="changeServer"
             @openNewServerModal="openNewServerModal"
+            @openServerModal="openServerModal"
         ></ServerList>
         <ChannelList
             :channels="channels"
@@ -29,7 +30,8 @@
             id="messages"
             v-bind:style="[currentUser.currentChannel > 0 ? {'background-color': 'var(--aquifer-light-1)'} : {'background-color': 'var(--aquifer-medium-4)'}]"
         >
-            <p v-if="currentUser.currentChannel === 0" style="color: var(--aquifer-text-dark-1); font-size: 4vh; font-family: Calibri, Arial, sans-serif">You are not in any text channels.</p>
+            <p v-if="currentUser.currentChannel === 0 && currentUser.currentServer !== 0" style="color: var(--aquifer-text-dark-1); font-size: 4vh; font-family: Calibri, Arial, sans-serif">You are not in any text channel.</p>
+            <p v-if="currentUser.currentChannel === 0 && currentUser.currentServer === 0" style="color: var(--aquifer-text-dark-1); font-size: 4vh; font-family: Calibri, Arial, sans-serif">You are not in any server.</p>
             <message-component
                 v-for="message in currentMessages()"
                 :key="message.id"
@@ -69,6 +71,12 @@
             :currentServer="currentUser.currentServer"
             @closeModal="closeModal('newChannel')"
         ></NewChannelPopup>
+        <ServerPopup
+            v-if="serverModalDetails.modalOpen"
+            @closeModal="closeModal('server')"
+            @deleteServer="deleteServer"
+            :server="serverModalDetails.selectedServer"
+        ></ServerPopup>
         <ChannelPopup
             v-if="channelModalDetails.modalOpen"
             @closeModal="closeModal('channel')"
@@ -93,6 +101,7 @@
     const isOpen = ws => ws.readyState === ws.OPEN;
 
     import { setWsHeartbeat } from "ws-heartbeat/client";
+    import xhr from "xhr";
 
     export default {
         name: 'MessagesPage',
@@ -104,6 +113,7 @@
             MsgPopup: () => import('./MessagesPageComponents/MsgPopup.vue'),
             UserList: () => import('./MessagesPageComponents/UserList.vue'),
             ServerList: () => import('./MessagesPageComponents/ServerList.vue'),
+            ServerPopup: () => import('./MessagesPageComponents/ServerPopup.vue'),
             NewChannelPopup: () => import('./MessagesPageComponents/NewChannelPopup.vue'),
             NewServerPopup: () => import('./MessagesPageComponents/NewServerPopup.vue'),
         },
@@ -130,6 +140,10 @@
             channelModalDetails: {
                 modalOpen: false,
                 selectedChannel: {}
+            },
+            serverModalDetails: {
+                modalOpen: false,
+                selectedServer: {}
             },
             currentUser: {
                 username: "DefaultUser",
@@ -209,7 +223,6 @@
                         });
                     }
                     if (category === "channelList") {
-                        console.log(message);
                         this.channels = message;
                     }
                     if (category === "serverList") {
@@ -238,10 +251,33 @@
                     if (category === "newServer") {
                         Vue.set(this.servers, message.id, message);
                     }
+                    if (category === "deleteServer") {
+                        this.servers = message;
+                    }
                 }
             }
         },
         methods: {
+            checkPower(username, usernum) {
+                return new Promise((resolve) => {
+                    xhr({
+                        method: "get",
+                        uri: config.serverUrl + "/userPower/" + username + "/" + usernum,
+                        useXDR: true,
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Access-Control-Allow-Origin": "*",
+                        }
+                    }, (err, resp, body) => {
+                        if (err) throw err;
+                        if (resp.statusCode !== 200) {
+                            console.log(resp.statusCode);
+                        }
+                        console.log(`Body: ${body}`);
+                        resolve(body);
+                    });
+                })
+            },
             currentMessages() {
                 return this.messages.filter(message => message.channel === this.currentUser.currentChannel);
             },
@@ -281,7 +317,6 @@
                 // this.sendSocket("changedServer", currentServer);
                 this.sendSocket("queryChannels", currentServer);
                 this.changeChannel(0);
-                //TODO: make messages update upon server switch
             },
             closeWebsocket() {
                 this.sendSocket("loseUser", this.currentUser);
@@ -294,6 +329,12 @@
                         this.editing = true;
                         this.editingId = messageId;
                     }
+                }
+            },
+            async deleteServer(serverId) {
+                if (await this.checkPower(this.currentUser.username, this.currentUser.userNum) === "admin") {
+                    this.changeServer(0);
+                    this.sendSocket("deleteServer", serverId);
                 }
             },
             deleteChannel(channelId) {
@@ -313,15 +354,26 @@
                 if (whichOne === "newChannel") {
                     this.newChannelModalDetails.modalOpen = false;
                 }
+                if (whichOne === "server") {
+                    this.serverModalDetails.modalOpen = false;
+                }
                 if (whichOne === "channel") {
                     this.channelModalDetails.modalOpen = false;
                 }
             },
-            openNewServerModal() {
-                this.newServerModalDetails.modalOpen = true;
+            async openNewServerModal() {
+                if (await this.checkPower(this.currentUser.username, this.currentUser.userNum) === "admin") {
+                    this.newServerModalDetails.modalOpen = true;
+                }
             },
             openNewChannelModal() {
                 this.newChannelModalDetails.modalOpen = true;
+            },
+            async openServerModal(data) {
+                if (await this.checkPower(this.currentUser.username, this.currentUser.userNum) === "admin") {
+                    this.serverModalDetails.selectedServer = {...data};
+                    this.serverModalDetails.modalOpen = true;
+                }
             },
             openChannelModal(data) {
                 this.channelModalDetails.selectedChannel = data;

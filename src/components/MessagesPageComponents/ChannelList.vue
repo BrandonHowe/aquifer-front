@@ -6,8 +6,8 @@
             :channelName="channel.name"
             v-on:click.native="oneClick(channel.id)"
             v-bind:class="{
-                coloredBackground: channel.id === currentlySelected,
-                channelHover: channel.id !== currentlySelected
+                coloredBackground: channel.id === currentlySelectedIdx,
+                channelHover: channel.id !== currentlySelectedIdx
             }"
         ></Channel>
         <div id="newChannel" @click="newChannel">
@@ -30,6 +30,7 @@ export default {
     data() {
         return {
             currentlySelected: 0,
+            currentlySelectedIdx: 0,
             clicks: {
                 num: 0,
                 channel: 0,
@@ -41,7 +42,8 @@ export default {
     },
     methods: {
         changeSelection (channelId) {
-            this.currentlySelected = channelId;
+            this.currentlySelected = this.channels.findIndex(l => l.id === channelId);
+            this.currentlySelectedIdx = channelId;
             this.$emit("changedSelection", channelId);
             // console.log(channelName);
         },
