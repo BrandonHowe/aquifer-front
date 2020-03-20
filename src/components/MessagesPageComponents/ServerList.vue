@@ -11,11 +11,16 @@
             }"
         >
         </Server>
+        <div v-if="userPower === 'admin'" class="addServer">
+            <p class="addServerText">+</p>
+        </div>
     </div>
 </template>
 
 <script>
     import Server from './Server.vue';
+    import xhr from "xhr";
+    import {config} from "../../assets/config";
 
     export default {
         name: "ServerList",
@@ -23,7 +28,8 @@
             Server
         },
         props: {
-            servers: Object
+            servers: Object,
+            user: Object,
         },
         data() {
             return {
@@ -31,10 +37,34 @@
                 clicks: {
                     num: 0,
                     server: 0,
-                }
+                },
+                userPower: "",
             }
         },
+        async mounted() {
+            this.userPower = await this.checkPower(this.user.username, this.user.userNum);
+        },
         methods: {
+            checkPower(username, usernum) {
+                return new Promise((resolve) => {
+                    xhr({
+                        method: "get",
+                        uri: config.serverUrl + "/userPower/" + username + "/" + usernum,
+                        useXDR: true,
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Access-Control-Allow-Origin": "*",
+                        }
+                    }, (err, resp, body) => {
+                        if (err) throw err;
+                        if (resp.statusCode !== 200) {
+                            console.log(resp.statusCode);
+                        }
+                        console.log(`Body: ${body}`);
+                        resolve(body);
+                    });
+                })
+            },
             changeServer(serverId) {
                 this.currentlySelected = serverId;
                 this.$emit("changedServer", serverId);
@@ -70,6 +100,30 @@
         grid-row: 1 / 21;
         /* background-color: #044289; */
         background-color: var(--aquifer-dark-2);
+    }
+    .addServer {
+        width: 80%;
+        border-radius: 50%;
+        padding-top: 40%;
+        padding-bottom: 40%;
+        margin: 10%;
+        position: relative;
+        display: inline-block;
+        vertical-align: middle;
+        background-color: var(--aquifer-medium-3);
+    }
+    .addServer:hover {
+        background-color: var(--aquifer-medium-2);
+    }
+    .addServerText {
+        margin: 0;
+        position: absolute;
+        top: 15%;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        font-size: 4vh;
+        line-height: calc(100%);
     }
     .channelHover {
         background-color: var(--aquifer-medium-3);

@@ -2,6 +2,7 @@
     <div id="messagesPage">
         <ServerList
             :servers="servers"
+            :user="currentUser"
             @changedServer="changeServer"
         ></ServerList>
         <ChannelList
