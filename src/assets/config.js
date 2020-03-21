@@ -9,8 +9,8 @@ const config = {
     serverUrl: serverProduction,
 };
 
-const mode = "dev"; // Use this for development
-// const mode = "prod"; // Use this for production, default
+// const mode = "dev"; // Use this for development
+const mode = "prod"; // Use this for production, default
 
 if (mode === "dev") {
     config.wsUrl = wsDev;

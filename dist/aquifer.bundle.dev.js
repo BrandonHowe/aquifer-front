@@ -3315,7 +3315,7 @@ eval("var api = __webpack_require__(/*! ../../node_modules/style-loader/dist/run
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"config\", function() { return config; });\nconst wsProduction = \"wss://aquifer-social.herokuapp.com\";\r\nconst wsDev = \"ws://localhost:5000\";\r\n\r\nconst serverProduction = \"https://aquifer-social.herokuapp.com\";\r\nconst serverDev = \"http://localhost:5000\";\r\n\r\nconst config = {\r\n    wsUrl: wsProduction,\r\n    serverUrl: serverProduction,\r\n};\r\n\r\nconst mode = \"dev\"; // Use this for development\r\n// const mode = \"prod\"; // Use this for production, default\r\n\r\nif (mode === \"dev\") {\r\n    config.wsUrl = wsDev;\r\n    config.serverUrl = serverDev;\r\n}\r\n\r\n\r\n\n\n//# sourceURL=webpack:///./src/assets/config.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"config\", function() { return config; });\nconst wsProduction = \"wss://aquifer-social.herokuapp.com\";\r\nconst wsDev = \"ws://localhost:5000\";\r\n\r\nconst serverProduction = \"https://aquifer-social.herokuapp.com\";\r\nconst serverDev = \"http://localhost:5000\";\r\n\r\nconst config = {\r\n    wsUrl: wsProduction,\r\n    serverUrl: serverProduction,\r\n};\r\n\r\n// const mode = \"dev\"; // Use this for development\r\nconst mode = \"prod\"; // Use this for production, default\r\n\r\nif (mode === \"dev\") {\r\n    config.wsUrl = wsDev;\r\n    config.serverUrl = serverDev;\r\n}\r\n\r\n\r\n\n\n//# sourceURL=webpack:///./src/assets/config.js?");
 
 /***/ }),
 
