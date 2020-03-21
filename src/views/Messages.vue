@@ -33,18 +33,15 @@
                     }
                 }, (err, resp, body) => {
                     if (err) throw err;
-                    console.log(`STATUS: ${resp.statusCode}`);
                     body = JSON.parse(body);
-                    const currentUser = {
+                    self.currentUser = {
                         username: localStorage.getItem("username"),
                         userNum: localStorage.getItem("usernum"),
                         currentChannel: body.currentchannel,
                         messages: body.messages,
                         currentServer: body.currentserver
                     };
-                    self.currentUser = currentUser;
                     self.loaded = true;
-                    console.log(currentUser);
                 })
             } else {
                 this.$router.replace("/login");

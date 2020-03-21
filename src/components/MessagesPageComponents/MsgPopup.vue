@@ -58,7 +58,6 @@
                         if (resp.statusCode !== 200) {
                             console.log(resp.statusCode);
                         }
-                        console.log(`Body: ${body}`);
                         resolve(body);
                     });
                 })
@@ -70,13 +69,10 @@
                     return true;
                 } else {
                     const power = await this.checkPower(username, usernum);
-                    const powerMatches = power === "admin";
-                    console.log(powerMatches);
-                    return powerMatches;
+                    return power === "admin";
                 }
             },
             editMessage() {
-                console.log(`editing ${this.msgId}`);
                 this.$emit("editMessage", this.msgId);
                 this.$emit("closeMsgModal");
                 this.clickingMain = false;

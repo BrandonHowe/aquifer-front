@@ -61,10 +61,8 @@
                     }
                 }, (err, resp, body) => {
                     if (err) throw err;
-                    console.log(`LOGIN STATUS: ${resp.statusCode}`);
                     body = JSON.parse(body);
                     if (body.status === "success") {
-                        console.log(body);
                         localStorage.setItem("username", self.username);
                         localStorage.setItem("password", self.password);
                         localStorage.setItem("usernum", body.usernum);
@@ -95,7 +93,6 @@
                     if (resp.statusCode !== 200) {
                         console.log(resp.statusCode);
                     }
-                    console.log(resp);
                     self.xhrstatus = body;
                 });
             },

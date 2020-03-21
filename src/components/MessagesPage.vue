@@ -276,7 +276,6 @@
                         if (resp.statusCode !== 200) {
                             console.log(resp.statusCode);
                         }
-                        console.log(`Body: ${body}`);
                         resolve(body);
                     });
                 })
@@ -305,7 +304,7 @@
                             id: this.editingId,
                         };
                         this.editing = false;
-                        document.getElementById("sendMessage").value = "";
+                        this.sendMessageVal.value = "";
                         this.sendSocket("editMessage", newMessage);
                     }
                 }
