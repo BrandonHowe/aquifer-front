@@ -32,6 +32,6 @@ module.exports = {
         extensions: [ '.tsx', '.ts', '.js'],
     },
     plugins: [
-        new FaviconsWebpackPlugin('static/favicon-32x32.png')
+        new FaviconsWebpackPlugin('./static/favicon-32x32.png')
     ]
 };
