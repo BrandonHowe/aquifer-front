@@ -10,7 +10,7 @@
             <InfoBox
                 class="infoBox"
                 heading="How do I use Aquifer?"
-                data="It's easy. Join a server or make your own, then click on a channel to join the channel. Sending messages is as simple as typing in your message and hitting Enter. If you need to edit or delete your message, double click it and a menu will pop up. Working with channels is easy, too. You can hit the new channel button to name and create your channel. If you need to delete a channel, simply double click the channel name."
+                data="It's easy. Join a server, then click on a channel to join the channel. If you want, you can make your own channel or delete a pre-existing one. Sending messages is as simple as typing in your message and hitting Enter. If you need to edit or delete your message, double click it and a menu will pop up. Working with channels is easy, too. You can hit the new channel button to name and create your channel. If you need to delete a channel, simply double click the channel name."
             ></InfoBox>
             <InfoBox
                 class="infoBox"
@@ -52,9 +52,9 @@
         min-height: calc(100vh);
     }
     .aboutTitle {
-        margin: 0%;
+        margin: 0;
         padding-top: 5%;
         font-size: 60px;
-        font-family: "Candara Light", "Candara";
+        font-family: "Candara Light", "Candara", sans-serif;
     }
 </style>

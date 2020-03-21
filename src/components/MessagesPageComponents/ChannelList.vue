@@ -1,7 +1,16 @@
 <template>
     <div class="channelList">
-        <Channel v-for="channel in channels" :key="channel.id" :channelName="channel.name" v-on:click.native="oneClick(channel.id)" v-bind:class="{coloredBackground: channel.id === currentlySelected, channelHover: channel.id !== currentlySelected}"></Channel>
-        <div id="newChannel" @click="newChannel">
+        <Channel
+            v-for="channel in channels"
+            :key="channel.id"
+            :channelName="channel.name"
+            v-on:click.native="oneClick(channel.id)"
+            v-bind:class="{
+                coloredBackground: channel.id === currentlySelectedIdx,
+                channelHover: channel.id !== currentlySelectedIdx
+            }"
+        ></Channel>
+        <div v-if="inServer === true" id="newChannel" @click="newChannel">
             New Channel
         </div>
     </div>
@@ -21,6 +30,7 @@ export default {
     data() {
         return {
             currentlySelected: 0,
+            currentlySelectedIdx: 0,
             clicks: {
                 num: 0,
                 channel: 0,
@@ -28,12 +38,13 @@ export default {
         }
     },
     props: {
-        channels: Object
+        channels: Array,
+        inServer: Boolean
     },
     methods: {
         changeSelection (channelId) {
-            this.currentlySelected = channelId;
-            console.log("New channel: " + channelId);
+            this.currentlySelected = this.channels.findIndex(l => l.id === channelId);
+            this.currentlySelectedIdx = channelId;
             this.$emit("changedSelection", channelId);
             // console.log(channelName);
         },
@@ -78,6 +89,9 @@ export default {
         .channelList {
             grid-column: 2 / 6;
         }
+    }
+    #newChannel {
+        user-select: none;
     }
     .channelHover {
         transition: background-color 0.1s;

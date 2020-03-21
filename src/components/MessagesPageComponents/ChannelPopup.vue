@@ -18,7 +18,7 @@
     import '@coreui/icons';
     import '../../assets/colorVars.css';
 
-    // const socket = new WebSocket("ws://localhost:5000");
+    //TODO: make this work with the server update
 
     export default {
         name: "ChannelPopup",
@@ -68,12 +68,13 @@
     }
     .channelPopup-content {
         background-color: var(--aquifer-medium-4);
-        margin: 10% auto;
+        margin: 12% auto;
         /* 15% from the top and centered */
-        height: 60%;
+        height: 40%;
         padding: 20px;
-        border: 1px solid #264F5F;
         width: 80%;
+        border: var(--aquifer-light-1) 5px solid;
+        border-radius: 10px;
         /* Could be more or less, depending on screen size */
     }
     .close {

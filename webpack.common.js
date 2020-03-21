@@ -1,3 +1,5 @@
+const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
+
 module.exports = {
     entry: "./src/main.ts",
     module: {
@@ -25,7 +27,11 @@ module.exports = {
     resolve: {
         alias: {
             'vue$': 'vue/dist/vue.esm.js',
+            "request$": "xhr",
         },
         extensions: [ '.tsx', '.ts', '.js'],
     },
+    plugins: [
+        new FaviconsWebpackPlugin('./static/favicon-32x32.png')
+    ]
 };

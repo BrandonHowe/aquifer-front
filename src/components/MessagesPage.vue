@@ -1,9 +1,14 @@
 <template>
     <div id="messagesPage">
-        <div id="servers">
-
-        </div>
+        <ServerList
+            :servers="servers"
+            :user="currentUser"
+            @changedServer="changeServer"
+            @openNewServerModal="openNewServerModal"
+            @openServerModal="openServerModal"
+        ></ServerList>
         <ChannelList
+            :inServer="currentUser.currentServer !== 0"
             :channels="channels"
             @changedSelection="changeChannel"
             @openChannelModal="openChannelModal"
@@ -16,13 +21,18 @@
              }"
         >
             <router-link
-                to="/about"
+                :to="'/user/' + currentUser.username + '/' + currentUser.userNum"
                 class="profileRouterLink"
             >
                 {{currentUser.username}}#{{currentUser.userNum}}
             </router-link>
         </div>
-        <div id="messages">
+        <div
+            id="messages"
+            v-bind:style="[currentUser.currentChannel > 0 ? {'background-color': 'var(--aquifer-light-1)'} : {'background-color': 'var(--aquifer-medium-4)'}]"
+        >
+            <p v-if="currentUser.currentChannel === 0 && currentUser.currentServer !== 0" style="color: var(--aquifer-text-dark-1); font-size: 4vh; font-family: Calibri, Arial, sans-serif">You are not in any text channel.</p>
+            <p v-if="currentUser.currentChannel === 0 && currentUser.currentServer === 0" style="color: var(--aquifer-text-dark-1); font-size: 4vh; font-family: Calibri, Arial, sans-serif">You are not in any server.</p>
             <message-component
                 v-for="message in currentMessages()"
                 :key="message.id"
@@ -37,6 +47,7 @@
         ></UserList>
         <input
             v-on:keydown.enter="chatmessage"
+            v-model="sendMessageVal"
             id="sendMessage"
             type="text"
             autocomplete="off"
@@ -53,10 +64,21 @@
             :message="msgModalDetails.message"
             :msgId="msgModalDetails.id"
         ></MsgPopup>
+        <NewServerPopup
+            v-if="newServerModalDetails.modalOpen"
+            @closeModal="closeModal('newServer')"
+        ></NewServerPopup>
         <NewChannelPopup
             v-if="newChannelModalDetails.modalOpen"
+            :currentServer="currentUser.currentServer"
             @closeModal="closeModal('newChannel')"
         ></NewChannelPopup>
+        <ServerPopup
+            v-if="serverModalDetails.modalOpen"
+            @closeModal="closeModal('server')"
+            @deleteServer="deleteServer"
+            :server="serverModalDetails.selectedServer"
+        ></ServerPopup>
         <ChannelPopup
             v-if="channelModalDetails.modalOpen"
             @closeModal="closeModal('channel')"
@@ -74,20 +96,14 @@
     import moment from 'moment';
     import * as randomWords from "random-words";
 
+    import {config} from "../assets/config.js";
+
     import "../assets/colorVars.css";
 
     const isOpen = ws => ws.readyState === ws.OPEN;
 
     import { setWsHeartbeat } from "ws-heartbeat/client";
-    // PRODUCTION
-    const socket = new WebSocket("wss://aquifer-social.herokuapp.com");
-    // DEV
-    // const socket = new WebSocket("ws://localhost:5000");
-
-    setWsHeartbeat(socket, '{"kind":"ping"}', {
-        pingTimeout: 60000, // in 60 seconds, if no message accepted from server, close the connection.
-        pingInterval: 25000, // every 25 seconds, send a ping message to the server.
-    });
+    import xhr from "xhr";
 
     export default {
         name: 'MessagesPage',
@@ -98,17 +114,27 @@
             ChannelList: () => import('./MessagesPageComponents/ChannelList.vue'),
             MsgPopup: () => import('./MessagesPageComponents/MsgPopup.vue'),
             UserList: () => import('./MessagesPageComponents/UserList.vue'),
+            ServerList: () => import('./MessagesPageComponents/ServerList.vue'),
+            ServerPopup: () => import('./MessagesPageComponents/ServerPopup.vue'),
             NewChannelPopup: () => import('./MessagesPageComponents/NewChannelPopup.vue'),
+            NewServerPopup: () => import('./MessagesPageComponents/NewServerPopup.vue'),
+        },
+        props: {
+            userInput: Object
         },
         data: () => ({
             moment: moment,
-            channels: {},
+            channels: [],
+            servers: {},
             msgModalDetails: {
                 modalOpen: false,
                 user: null,
                 date: null,
                 message: null,
                 id: null
+            },
+            newServerModalDetails: {
+                modalOpen: false
             },
             newChannelModalDetails: {
                 modalOpen: false,
@@ -117,11 +143,16 @@
                 modalOpen: false,
                 selectedChannel: {}
             },
+            serverModalDetails: {
+                modalOpen: false,
+                selectedServer: {}
+            },
             currentUser: {
                 username: "DefaultUser",
                 userNum: 1234,
                 currentChannel: 0,
                 messages: [],
+                currentServer: 0,
             },
             userList: {},
             editing: false,
@@ -131,6 +162,8 @@
             messages: [],
             socketConnected: false,
             pingTimeout: null,
+            sendMessageVal: "",
+            socket: new WebSocket(config.wsUrl)
         }),
         created() {
             window.addEventListener("beforeunload", () => {
@@ -138,26 +171,32 @@
             });
         },
         mounted() {
-            this.genName();
+            // this.genName();
+            this.currentUser = this.userInput;
             const self = this;
-            socket.onopen = () => {
-                this.socketConnected = true;
-                socket.send(JSON.stringify(["queryMessages", "query"]));
-                socket.send(JSON.stringify(["queryChannels", "query"]));
-                socket.send(JSON.stringify(["newUser", self.currentUser]));
+            setWsHeartbeat(this.socket, '{"kind":"ping"}', {
+                pingTimeout: 60000, // in 60 seconds, if no message accepted from server, close the connection.
+                pingInterval: 25000, // every 25 seconds, send a ping message to the server.
+            });
+            this.socket.onopen = () => {
+                self.socketConnected = true;
+                self.sendSocket("queryMessages", self.currentUser.currentChannel);
+                self.sendSocket("queryChannels", self.currentUser.currentServer);
+                self.sendSocket("queryServers", "query");
+                self.sendSocket("newUser", self.currentUser);
             };
-            socket.onclose = () => {
-                socket.send(JSON.stringify(["loseUser", self.currentUser]));
-                this.socketConnected = false;
+            this.socket.onclose = () => {
+                self.sendSocket("loseUser", self.currentUser);
+                self.socketConnected = false;
                 clearTimeout(this.pingTimeout);
             };
-            socket.onmessage = (data) => {
+            this.socket.onmessage = (data) => {
                 if (data.data !== '{"kind":"pong"}') {
                     const [category, message] = JSON.parse(data.data);
                     if (category === "message") {
                         const messagesElement = document.getElementById("messages");
                         const isScrolledToBottom = messagesElement.scrollTop + messagesElement.clientHeight <= messagesElement.scrollHeight + 1;
-                        socket.send(JSON.stringify(["queryMessages", "query"]));
+                        this.sendSocket("queryMessages", self.currentUser.currentChannel);
                         setImmediate(() => {
                             const newmessagesElement = document.getElementById("messages");
                             if (isScrolledToBottom) {
@@ -189,11 +228,19 @@
                     if (category === "channelList") {
                         this.channels = message;
                     }
+                    if (category === "serverList") {
+                        this.servers = message;
+                    }
                     if (category === "newUser") {
-                        this.userList = message;
+                        Vue.set(this.userList, message.id, message);
+                    }
+                    if (category === "kickUser") {
+                        if (message.username === localStorage.getItem("username") && message.usernum === localStorage.getItem("usernum")) {
+                            this.$router.push("/login");
+                        }
                     }
                     if (category === "loseUser") {
-                        this.userList = message;
+                        Vue.set(this.userList, message, undefined);
                     }
                     if (category === "bestowId") {
                         this.currentUser.id = message;
@@ -204,10 +251,35 @@
                     if (category === "deleteChannel") {
                         this.channels = message;
                     }
+                    if (category === "newServer") {
+                        Vue.set(this.servers, message.id, message);
+                    }
+                    if (category === "deleteServer") {
+                        this.servers = message;
+                    }
                 }
             }
         },
         methods: {
+            checkPower(username, usernum) {
+                return new Promise((resolve) => {
+                    xhr({
+                        method: "get",
+                        uri: config.serverUrl + "/userInfo/power/" + username + "/" + usernum,
+                        useXDR: true,
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Access-Control-Allow-Origin": "*",
+                        }
+                    }, (err, resp, body) => {
+                        if (err) throw err;
+                        if (resp.statusCode !== 200) {
+                            console.log(resp.statusCode);
+                        }
+                        resolve(body);
+                    });
+                })
+            },
             currentMessages() {
                 return this.messages.filter(message => message.channel === this.currentUser.currentChannel);
             },
@@ -218,62 +290,92 @@
                 if (this.currentUser.currentChannel > 0) {
                     if (this.editing === false) {
                         // Send the "pingServer" event to the server.
-                        const message = document.getElementById("sendMessage").value;
-                        document.getElementById("sendMessage").value = "";
+                        const message = this.sendMessageVal;
+                        this.sendMessageVal = "";
                         const newMessage = {
                             user: this.currentUser,
                             message: message,
                             channel: this.currentUser.currentChannel,
                         };
-                        socket.send(JSON.stringify(["message", newMessage]));
+                        this.sendSocket("message", newMessage);
                     } else {
                         const newMessage = {
-                            msg: document.getElementById("sendMessage").value,
+                            msg: this.sendMessageVal,
                             id: this.editingId,
                         };
                         this.editing = false;
-                        document.getElementById("sendMessage").value = "";
-                        socket.send(JSON.stringify(["editMessage", newMessage]));
+                        this.sendMessageVal = "";
+                        this.sendSocket("editMessage", newMessage);
                     }
                 }
             },
             changeChannel(currentChannel) {
                 Vue.set(this.currentUser, "currentChannel", currentChannel);
-                socket.send(JSON.stringify(["changedSelection", currentChannel]));
+                // this.sendSocket("changedSelection", currentChannel);
+                this.sendSocket("queryMessages", currentChannel);
+            },
+            changeServer(currentServer) {
+                Vue.set(this.currentUser, "currentServer", currentServer);
+                // this.sendSocket("changedServer", currentServer);
+                this.sendSocket("queryChannels", currentServer);
+                this.changeChannel(0);
             },
             closeWebsocket() {
-                socket.send(JSON.stringify(["loseUser", this.currentUser]));
+                this.sendSocket("loseUser", this.currentUser);
                 this.socketConnected = false;
             },
             editMessage(messageId) {
                 for (let i in this.messages) {
                     if (this.messages[i].id === messageId) {
-                        document.getElementById("#sendMessage").value = this.messages[i].message;
+                        this.sendMessageVal = this.messages[i].message;
                         this.editing = true;
                         this.editingId = messageId;
                     }
                 }
             },
+            async deleteServer(serverId) {
+                if (await this.checkPower(this.currentUser.username, this.currentUser.userNum) === "admin") {
+                    this.changeServer(0);
+                    this.sendSocket("deleteServer", serverId);
+                }
+            },
             deleteChannel(channelId) {
                 this.changeChannel(0);
-                socket.send(JSON.stringify(["deleteChannel", channelId]));
+                this.sendSocket("deleteChannel", channelId);
             },
             deleteMessage(messageId) {
-                socket.send(JSON.stringify(["deleteMessage", messageId]));
+                this.sendSocket("deleteMessage", messageId);
             },
             closeModal(whichOne) {
                 if (whichOne === "msg") {
                     this.msgModalDetails.modalOpen = false;
                 }
+                if (whichOne === "newServer") {
+                    this.newServerModalDetails.modalOpen = false;
+                }
                 if (whichOne === "newChannel") {
                     this.newChannelModalDetails.modalOpen = false;
+                }
+                if (whichOne === "server") {
+                    this.serverModalDetails.modalOpen = false;
                 }
                 if (whichOne === "channel") {
                     this.channelModalDetails.modalOpen = false;
                 }
             },
+            async openNewServerModal() {
+                if (await this.checkPower(this.currentUser.username, this.currentUser.userNum) === "admin") {
+                    this.newServerModalDetails.modalOpen = true;
+                }
+            },
             openNewChannelModal() {
                 this.newChannelModalDetails.modalOpen = true;
+            },
+            async openServerModal(data) {
+                if (await this.checkPower(this.currentUser.username, this.currentUser.userNum) === "admin") {
+                    this.serverModalDetails.selectedServer = {...data};
+                    this.serverModalDetails.modalOpen = true;
+                }
             },
             openChannelModal(data) {
                 this.channelModalDetails.selectedChannel = data;
@@ -292,7 +394,7 @@
                         modalOpen: true,
                         user: {
                             username: message.user.username,
-                            usernum: message.user.userNum,
+                            usernum: message.user.usernum,
                         },
                         date: message.utcTime,
                         message: message.message,
@@ -318,6 +420,10 @@
                         formatter: (word) => this.capitalizeFLetter(word)
                     }).join("");
                 }
+            },
+            sendSocket(category, data) {
+                const seshkey = localStorage.getItem("seshkey");
+                this.socket.send(JSON.stringify([category, seshkey, data]));
             }
         }
     }
@@ -336,21 +442,6 @@
         left: 0;
     }
 
-    #servers {
-        grid-column: 1;
-        grid-row: 1 / 21;
-        /* background-color: #044289; */
-        background-color: var(--aquifer-dark-2);
-    }
-
-    /*#channels {*/
-    /*    grid-column: 2 / 5;*/
-    /*    grid-row: 1 / 20;*/
-    /*    background: #0f6dbf;*/
-    /*    border: solid black;*/
-    /*    border-width: 0 2px 2px 2px;*/
-    /*}*/
-
     #profileArea {
         grid-column: 2 / 5;
         grid-row: 20;
@@ -360,11 +451,11 @@
         color: white;
         font-weight: bold;
         line-height: 5vh;
+        font-size: 2.5vh;
     }
 
     #messages {
         /* background: #9AC1EA; */
-        background: var(--aquifer-light-1);
         grid-column: 5 / 18;
         grid-row: 1 / 20;
         border: solid black;
