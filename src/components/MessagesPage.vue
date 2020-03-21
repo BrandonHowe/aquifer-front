@@ -47,6 +47,7 @@
         ></UserList>
         <input
             v-on:keydown.enter="chatmessage"
+            v-model="sendMessageVal"
             id="sendMessage"
             type="text"
             autocomplete="off"
@@ -161,6 +162,7 @@
             messages: [],
             socketConnected: false,
             pingTimeout: null,
+            sendMessageVal: "",
             socket: new WebSocket(config.wsUrl)
         }),
         created() {
@@ -326,7 +328,7 @@
             editMessage(messageId) {
                 for (let i in this.messages) {
                     if (this.messages[i].id === messageId) {
-                        document.getElementById("#sendMessage").value = this.messages[i].message;
+                        this.sendMessageVal = this.messages[i].message;
                         this.editing = true;
                         this.editingId = messageId;
                     }

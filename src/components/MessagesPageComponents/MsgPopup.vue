@@ -33,7 +33,7 @@
             message: String,
             msgId: Number,
         },
-        data () {
+        data() {
             return {
                 clickingMain: false,
                 modifiable: false,
@@ -43,7 +43,7 @@
             this.modifiable = await this.checkModifiable()
         },
         methods: {
-             checkPower(username, usernum) {
+            checkPower(username, usernum) {
                 return new Promise((resolve) => {
                     xhr({
                         method: "get",
@@ -76,6 +76,7 @@
                 }
             },
             editMessage() {
+                console.log(`editing ${this.msgId}`);
                 this.$emit("editMessage", this.msgId);
                 this.$emit("closeMsgModal");
                 this.clickingMain = false;
