@@ -49,7 +49,7 @@
                 return new Promise((resolve) => {
                     xhr({
                         method: "get",
-                        uri: config.serverUrl + "/userPower/" + username + "/" + usernum,
+                        uri: config.serverUrl + "/userInfo/power/" + username + "/" + usernum,
                         useXDR: true,
                         headers: {
                             "Content-Type": "application/json",

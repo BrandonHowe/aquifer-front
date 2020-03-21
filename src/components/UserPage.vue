@@ -36,11 +36,11 @@
             checkPromise (username, usernum, type) {
                 let url = "";
                 if (type === "status") {
-                    url = config.serverUrl + "/userStatus/" + username + "/" + usernum;
+                    url = config.serverUrl + "/userInfo/status/" + username + "/" + usernum;
                 } else if (type === "id") {
-                    url = config.serverUrl + "/userId/" + username + "/" + usernum;
+                    url = config.serverUrl + "/userInfo/id/" + username + "/" + usernum;
                 } else if (type === "messageCount") {
-                    url = config.serverUrl + "/userMessageCount/" + username + "/" + usernum;
+                    url = config.serverUrl + "/userInfo/messageCount/" + username + "/" + usernum;
                 }
                 return new Promise((resolve) => {
                     xhr({
