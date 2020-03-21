@@ -1,5 +1,6 @@
 <template>
     <div class="loginPage">
+        <h1 class="welcomeMsg">Welcome to Aquifer</h1>
         <div class="loginBox">
             <div class="loginHeaders">
                 <LoginHeader @changeSelected="changeSelected('login')" name="Login"></LoginHeader>
@@ -129,7 +130,7 @@
         height: 45%;
         padding: 5%;
         border-radius: 10px;
-        position: relative;
+        position: absolute;
         left: 20%;
         top: 22.5%;
         background-color: var(--aquifer-dark-3);
@@ -194,5 +195,11 @@
     }
     .xhrstatus {
         text-align: center;
+    }
+    .welcomeMsg {
+        font-size: 10vh;
+        color: var(--aquifer-light-2);
+        margin: 0;
+        padding-top: 2%;
     }
 </style>
