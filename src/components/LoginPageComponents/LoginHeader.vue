@@ -25,9 +25,9 @@
 <style scoped>
     .loginBar {
         background-color: #78A4B5;
-        height: 5px;
+        height: 4px;
         border-radius: 10px;
-        margin-top: 3px;
+        margin-top: 2px;
         transition: background-color 0.2s, padding-left 0.2s, padding-right 0.2s;
         padding-left: 0;
         padding-right: 0;
@@ -35,7 +35,7 @@
     }
     .loginOverbar {
         background-color: #78A4B5;
-        height: 5px;
+        height: 4px;
         border-radius: 10px;
         margin-top: 5px;
         transition: background-color 0.2s, padding-left 0.2s;

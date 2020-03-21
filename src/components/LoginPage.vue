@@ -8,7 +8,7 @@
                 <LoginHeader :id="2" :selected="selectedNum" @changeSelected="changeSelected('logout', 2)" name="Logout"></LoginHeader>
             </div>
             <div class="usernameInputs">
-                <input v-if="selected !== 'logout'" :style="[selected === 'login' ? {'width': '60%'} : {'width': '92%'}]" class="loginUsername" v-model="username" type="text" placeholder="Username..."/>
+                <input v-if="selected !== 'logout'" :style="[selected === 'login' ? {'width': '60%'} : {'width': '90%'}]" class="loginUsername" v-model="username" type="text" placeholder="Username..."/>
                 <input v-if="selected === 'login'" class="loginUsernum" v-model="usernum" type="text" placeholder="Usernum..."/>
             </div>
             <input v-if="selected !== 'logout'" class="loginInput" v-model="password" type="password" placeholder="Password..."/>
@@ -182,8 +182,8 @@
         width: 90%;
     }
     .loginSubmit {
-        width: 90%;
-        margin: 5% 2.5% 2.5% 2.5%;
+        width: 85%;
+        margin: 5%;
         height: 40px;
         line-height: 40px;
         border: 3px var(--aquifer-light-1) solid;
