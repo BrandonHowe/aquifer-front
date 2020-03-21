@@ -3,9 +3,9 @@
         <h1 class="welcomeMsg">Welcome to Aquifer</h1>
         <div class="loginBox">
             <div class="loginHeaders">
-                <LoginHeader @changeSelected="changeSelected('login')" name="Login"></LoginHeader>
-                <LoginHeader @changeSelected="changeSelected('create')" name="Create"></LoginHeader>
-                <LoginHeader @changeSelected="changeSelected('logout')" name="Logout"></LoginHeader>
+                <LoginHeader :id="0" :selected="selectedNum" @changeSelected="changeSelected('login', 0)" name="Login"></LoginHeader>
+                <LoginHeader :id="1" :selected="selectedNum" @changeSelected="changeSelected('create', 1)" name="Create"></LoginHeader>
+                <LoginHeader :id="2" :selected="selectedNum" @changeSelected="changeSelected('logout', 2)" name="Logout"></LoginHeader>
             </div>
             <div class="usernameInputs">
                 <input v-if="selected !== 'logout'" :style="[selected === 'login' ? {'width': '60%'} : {'width': '92%'}]" class="loginUsername" v-model="username" type="text" placeholder="Username..."/>
@@ -36,11 +36,13 @@
                 password: "",
                 xhrstatus: "",
                 selected: "login",
+                selectedNum: 0,
             }
         },
         methods: {
-            changeSelected(arg) {
+            changeSelected(arg, arg2) {
                 this.selected = arg;
+                this.selectedNum = arg2;
             },
             loginUser () {
                 const self = this;
