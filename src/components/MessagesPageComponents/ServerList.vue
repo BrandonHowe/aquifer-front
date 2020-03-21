@@ -60,7 +60,6 @@
                         if (resp.statusCode !== 200) {
                             console.log(resp.statusCode);
                         }
-                        console.log(`Body: ${body}`);
                         resolve(body);
                     });
                 })
