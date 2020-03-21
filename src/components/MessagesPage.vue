@@ -290,8 +290,8 @@
                 if (this.currentUser.currentChannel > 0) {
                     if (this.editing === false) {
                         // Send the "pingServer" event to the server.
-                        const message = document.getElementById("sendMessage").value;
-                        document.getElementById("sendMessage").value = "";
+                        const message = this.sendMessageVal;
+                        this.sendMessageVal = "";
                         const newMessage = {
                             user: this.currentUser,
                             message: message,
@@ -300,11 +300,11 @@
                         this.sendSocket("message", newMessage);
                     } else {
                         const newMessage = {
-                            msg: document.getElementById("sendMessage").value,
+                            msg: this.sendMessageVal,
                             id: this.editingId,
                         };
                         this.editing = false;
-                        this.sendMessageVal.value = "";
+                        this.sendMessageVal = "";
                         this.sendSocket("editMessage", newMessage);
                     }
                 }
