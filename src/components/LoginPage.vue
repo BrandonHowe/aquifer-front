@@ -82,7 +82,7 @@
                         usernum: this.usernum,
                         password: this.password
                     }),
-                    uri: "http://localhost:5000/createUser",
+                    uri: config.serverUrl + "/createUser",
                     useXDR: true,
                     headers: {
                         "Content-Type": "application/json",
@@ -103,7 +103,7 @@
                     body: JSON.stringify({
                         seshkey: localStorage.getItem("seshkey"),
                     }),
-                    uri: "http://localhost:5000/logout",
+                    uri: config.url + "/logout",
                     useXDR: true,
                     headers: {
                         "Content-Type": "application/json",

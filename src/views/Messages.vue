@@ -26,7 +26,7 @@
                     body: JSON.stringify({
                         seshkey: localStorage.getItem("seshkey")
                     }),
-                    uri: "http://localhost:5000/loginFromSeshkey",
+                    uri: config.serverUrl + "/loginFromSeshkey",
                     headers: {
                         "Content-Type": "application/json",
                         "Access-Control-Allow-Origin": "<origin> | *"
