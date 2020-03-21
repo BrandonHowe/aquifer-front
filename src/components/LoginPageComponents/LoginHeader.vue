@@ -68,5 +68,6 @@
         font-size: 24px;
         margin: 0;
         clear: both;
+        user-select: none;
     }
 </style>

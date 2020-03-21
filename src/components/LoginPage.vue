@@ -22,6 +22,7 @@
 
 <script>
     import '../assets/colorVars.css';
+    import {config} from "../assets/config.js";
     import xhr from "xhr";
     import LoginHeader from "./LoginPageComponents/LoginHeader.vue";
     export default {
@@ -53,7 +54,7 @@
                         usernum: this.usernum,
                         password: this.password
                     }),
-                    uri: "http://localhost:5000/login",
+                    uri: config.serverUrl + "/login",
                     headers: {
                         "Content-Type": "application/json",
                         "Access-Control-Allow-Origin": "<origin> | *"
@@ -62,12 +63,16 @@
                     if (err) throw err;
                     console.log(`LOGIN STATUS: ${resp.statusCode}`);
                     body = JSON.parse(body);
-                    console.log(body);
-                    localStorage.setItem("username", self.username);
-                    localStorage.setItem("password", self.password);
-                    localStorage.setItem("usernum", body.usernum);
-                    localStorage.setItem("seshkey", body.seshkey);
-                    this.$router.replace("/");
+                    if (body.status === "success") {
+                        console.log(body);
+                        localStorage.setItem("username", self.username);
+                        localStorage.setItem("password", self.password);
+                        localStorage.setItem("usernum", body.usernum);
+                        localStorage.setItem("seshkey", body.seshkey);
+                        this.$router.replace("/app");
+                    } else {
+                        self.xhrstatus = body.desc;
+                    }
                 })
             },
             createUser () {
@@ -199,9 +204,11 @@
         text-align: center;
     }
     .welcomeMsg {
+        font-family: Montserrat, Calibri, sans-serif;
         font-size: 10vh;
         color: var(--aquifer-light-2);
         margin: 0;
-        padding-top: 2%;
+        padding-top: 5vh;
+        user-select: none;
     }
 </style>
