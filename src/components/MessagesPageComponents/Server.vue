@@ -94,7 +94,7 @@
         transition: opacity 0.5s;
     }
 
-    .server:hover > .restOfIt {
+    .server:hover .restOfIt {
         display: block;
         opacity: 1;
     }
