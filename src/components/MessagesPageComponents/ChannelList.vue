@@ -10,7 +10,7 @@
                 channelHover: channel.id !== currentlySelectedIdx
             }"
         ></Channel>
-        <div id="newChannel" @click="newChannel">
+        <div v-if="inServer === true" id="newChannel" @click="newChannel">
             New Channel
         </div>
     </div>
@@ -38,7 +38,8 @@ export default {
         }
     },
     props: {
-        channels: Array
+        channels: Array,
+        inServer: Boolean
     },
     methods: {
         changeSelection (channelId) {
@@ -88,6 +89,9 @@ export default {
         .channelList {
             grid-column: 2 / 6;
         }
+    }
+    #newChannel {
+        user-select: none;
     }
     .channelHover {
         transition: background-color 0.1s;

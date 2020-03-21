@@ -8,6 +8,7 @@
             @openServerModal="openServerModal"
         ></ServerList>
         <ChannelList
+            :inServer="currentUser.currentServer !== 0"
             :channels="channels"
             @changedSelection="changeChannel"
             @openChannelModal="openChannelModal"
@@ -150,7 +151,7 @@
                 userNum: 1234,
                 currentChannel: 0,
                 messages: [],
-                currentServer: 1,
+                currentServer: 0,
             },
             userList: {},
             editing: false,
