@@ -9,6 +9,11 @@
             <p>User ID: {{ id }}</p>
             <p>Message count: {{ messageCount }}</p>
         </div>
+        <router-link to="/login">
+            <div class="goLogin">
+                Logout
+            </div>
+        </router-link>
     </div>
 </template>
 
@@ -156,5 +161,16 @@
         top: 15%;
         left: 5%;
         text-align: left;
+    }
+
+    .goLogin {
+        width: 20%;
+        height: 50px;
+        line-height: 50px;
+        position: fixed;
+        bottom: 10%;
+        left: 5%;
+        background-color: #67AFCB;
+        border-radius: 5px;
     }
 </style>

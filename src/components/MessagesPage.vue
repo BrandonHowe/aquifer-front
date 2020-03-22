@@ -85,6 +85,11 @@
             @deleteChannel="deleteChannel"
             :channel="channelModalDetails.selectedChannel"
         ></ChannelPopup>
+        <NewUserPopup
+            v-if="newUserModalDetails.modalOpen"
+            @closeModal="closeModal('newUser')"
+            :usernum="currentUser.userNum"
+        ></NewUserPopup>
     </div>
 </template>
 
@@ -118,6 +123,7 @@
             ServerPopup: () => import('./MessagesPageComponents/ServerPopup.vue'),
             NewChannelPopup: () => import('./MessagesPageComponents/NewChannelPopup.vue'),
             NewServerPopup: () => import('./MessagesPageComponents/NewServerPopup.vue'),
+            NewUserPopup: () => import("./MessagesPageComponents/NewUserPopup.vue")
         },
         props: {
             userInput: Object
@@ -132,6 +138,9 @@
                 date: null,
                 message: null,
                 id: null
+            },
+            newUserModalDetails: {
+                modalOpen: false
             },
             newServerModalDetails: {
                 modalOpen: false
@@ -173,6 +182,9 @@
         mounted() {
             // this.genName();
             this.currentUser = this.userInput;
+            if (localStorage.getItem("newUser") === "true") {
+                this.newUserModalDetails.modalOpen = true;
+            }
             const self = this;
             setWsHeartbeat(this.socket, '{"kind":"ping"}', {
                 pingTimeout: 60000, // in 60 seconds, if no message accepted from server, close the connection.
@@ -361,6 +373,10 @@
                 }
                 if (whichOne === "channel") {
                     this.channelModalDetails.modalOpen = false;
+                }
+                if (whichOne === "newUser") {
+                    this.newUserModalDetails = false;
+                    localStorage.setItem("newUser", false);
                 }
             },
             async openNewServerModal() {
