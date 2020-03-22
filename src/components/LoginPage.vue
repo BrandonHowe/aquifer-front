@@ -79,7 +79,6 @@
                     method: "post",
                     body: JSON.stringify({
                         username: this.username,
-                        usernum: this.usernum,
                         password: this.password
                     }),
                     uri: config.serverUrl + "/createUser",
@@ -94,6 +93,10 @@
                         console.log(resp.statusCode);
                     }
                     self.xhrstatus = body;
+                    if (JSON.parse(body).status === "Success") {
+                        self.usernum = JSON.parse(body).usernum;
+                        this.loginUser();
+                    }
                 });
             },
             logout () {
@@ -103,7 +106,7 @@
                     body: JSON.stringify({
                         seshkey: localStorage.getItem("seshkey"),
                     }),
-                    uri: config.url + "/logout",
+                    uri: config.serverUrl + "/logout",
                     useXDR: true,
                     headers: {
                         "Content-Type": "application/json",
