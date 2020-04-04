@@ -93,24 +93,21 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
     /* eslint-disable */
-    // import '@types/node';
 
     import Vue from 'vue';
     import moment from 'moment';
     import * as randomWords from "random-words";
 
-    import {config} from "../assets/config.js";
+    import {config} from "../assets/config";
 
     import "../assets/colorVars.css";
-
-    const isOpen = ws => ws.readyState === ws.OPEN;
 
     import { setWsHeartbeat } from "ws-heartbeat/client";
     import xhr from "xhr";
 
-    export default {
+    export default Vue.extend({
         name: 'MessagesPage',
         components: {
             ChannelPopup: () => import("./MessagesPageComponents/ChannelPopup.vue"),
@@ -180,7 +177,6 @@
             });
         },
         mounted() {
-            // this.genName();
             this.currentUser = this.userInput;
             if (localStorage.getItem("newUser") === "true") {
                 this.newUserModalDetails.modalOpen = true;
@@ -273,10 +269,10 @@
             }
         },
         methods: {
-            checkPower(username, usernum) {
+            checkPower(username: string, usernum: number) {
                 return new Promise((resolve) => {
                     xhr({
-                        method: "get",
+                        method: "GET",
                         uri: config.serverUrl + "/userInfo/power/" + username + "/" + usernum,
                         useXDR: true,
                         headers: {
@@ -376,7 +372,7 @@
                 }
                 if (whichOne === "newUser") {
                     this.newUserModalDetails = false;
-                    localStorage.setItem("newUser", false);
+                    localStorage.setItem("newUser", "false");
                 }
             },
             async openNewServerModal() {
@@ -442,7 +438,7 @@
                 this.socket.send(JSON.stringify([category, seshkey, data]));
             }
         }
-    }
+    })
 </script>
 
 <style scoped>
@@ -479,19 +475,9 @@
         overflow: auto;
     }
 
-    /*#msgForm {*/
-    /*    grid-column: 6 / 21;*/
-    /*    grid-row: 20;*/
-    /*}*/
-
     #sendMessage {
-        /* grid-column: 2 / 20;
-      grid-row: 21; */
         grid-column: 5 / 18;
         grid-row: 20;
-        /* float: left; */
-        /*border: solid black;*/
-        /*border-width: 0 0 0 0;*/
         background: var(--aquifer-light-2);
     }
 
@@ -511,16 +497,4 @@
     .profileRouterLink {
         color: azure;
     }
-
-    /*#submitForm {*/
-    /*    display: none;*/
-    /*}*/
-
-    /*.red {*/
-    /*    background-color: red;*/
-    /*}*/
-
-    /*.green {*/
-    /*    background-color: green;*/
-    /*}*/
 </style>

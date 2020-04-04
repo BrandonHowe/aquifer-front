@@ -26,15 +26,16 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
     import "../assets/colorVars.css";
+    import Vue from "vue";
 
-    export default {
+    export default Vue.extend({
         name: "AboutPage",
         components: {
             InfoBox: () => import('./AboutPageComponents/InfoBox.vue')
         }
-    }
+    })
 </script>
 
 <style scoped>

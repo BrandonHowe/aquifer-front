@@ -5,7 +5,7 @@
 <script>
     import MessagesPage from "../components/MessagesPage.vue";
     import xhr from "xhr";
-    import {config} from '../assets/config.js';
+    import {config} from '../assets/config';
 
     export default {
         name: "Messages",

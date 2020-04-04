@@ -1,17 +1,35 @@
 <template>
     <div class="message">
-        <p><span class="message-username">{{user.username}}</span> <span class="message-date">{{formattedTime}}</span></p>
-        <p class="message-content"><span v-html="formattedMsg"></span></p>
-        <LinkPrevue v-for="link in previewLinks" :key="link" :url="link"></LinkPrevue>
+        <p>
+            <span
+                class="message-username"
+            >{{user.username}}</span>
+            <span
+                class="message-date"
+            >{{formattedTime}}</span>
+        </p>
+        <p
+            class="message-content"
+        >
+            <span
+                v-html="formattedMsg"
+            ></span>
+        </p>
+        <LinkPrevue
+            v-for="link in previewLinks"
+            :key="link"
+            :url="link"
+        ></LinkPrevue>
     </div>
 </template>
 
-<script>
+<script lang="ts">
     import '../../assets/colorVars.css';
     import moment from 'moment';
     import LinkPrevue from 'link-prevue';
+    import Vue from "vue";
 
-    export default {
+    export default Vue.extend({
         name: "Message",
         components: {
             LinkPrevue
@@ -58,17 +76,13 @@
                 });
             }
         }
-        // data: () => ({
-        //     clicks: 0
-        // }),
-    }
+    })
 </script>
 
 <style scoped>
     .message {
         width: 94%;
         background-color: var(--aquifer-medium-2);
-        /* height: 50px; */
         text-align: left;
         padding: 10px 3% 10px 3%;
         word-wrap: break-word;

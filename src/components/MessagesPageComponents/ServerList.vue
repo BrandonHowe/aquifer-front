@@ -11,18 +11,23 @@
             }"
         >
         </Server>
-        <div v-if="userPower === 'admin'" class="addServer" @click="newServer">
+        <div
+            v-if="userPower === 'admin'"
+            class="addServer"
+            @click="newServer"
+        >
             <p class="addServerText">+</p>
         </div>
     </div>
 </template>
 
-<script>
+<script lang="ts">
     import Server from './Server.vue';
     import xhr from "xhr";
     import {config} from "../../assets/config";
+    import Vue from "vue";
 
-    export default {
+    export default Vue.extend({
         name: "ServerList",
         components: {
             Server
@@ -45,10 +50,10 @@
             this.userPower = await this.checkPower(this.user.username, this.user.userNum);
         },
         methods: {
-            checkPower(username, usernum) {
+            checkPower(username: string, usernum: number) {
                 return new Promise((resolve) => {
                     xhr({
-                        method: "get",
+                        method: "GET",
                         uri: config.serverUrl + "/userInfo/power/" + username + "/" + usernum,
                         useXDR: true,
                         headers: {
@@ -93,7 +98,7 @@
                 this.$emit("openNewServerModal");
             }
         }
-    }
+    })
 </script>
 
 <style scoped>

@@ -1,21 +1,40 @@
 <template>
     <div class="home">
-        <h1 class="heading">Aquifer</h1>
-        <router-link class="openbutton" to="/app">
+        <h1
+            class="heading"
+        >Aquifer</h1>
+        <router-link
+            class="openbutton"
+            to="/app"
+        >
             Open
         </router-link>
-        <div class="maintext">
+        <div
+            class="maintext"
+        >
             <h2 class="elevatorpitch">The new open source, water based social media.</h2>
             <h3 class="description">Aquifer is an easy way to chat online, whether it is for school, work, or fun.</h3>
         </div>
-        <div class="linkButtons">
-            <router-link class="routerLink" to="/app">
-                <div class="linkButton messagesButton">
+        <div
+            class="linkButtons"
+        >
+            <router-link
+                class="routerLink"
+                to="/app"
+            >
+                <div
+                    class="linkButton messagesButton"
+                >
                     Get started!
                 </div>
             </router-link>
-            <router-link class="routerLink" to="/about">
-                <div class="linkButton aboutButton">
+            <router-link
+                class="routerLink"
+                to="/about"
+            >
+                <div
+                    class="linkButton aboutButton"
+                >
                     About Aquifer
                 </div>
             </router-link>
@@ -23,10 +42,12 @@
     </div>
 </template>
 
-<script>
-    export default {
+<script lang="ts">
+    import Vue from 'vue';
+
+    export default Vue.extend({
         name: "Home"
-    }
+    })
 </script>
 
 <style scoped>

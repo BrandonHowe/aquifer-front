@@ -10,14 +10,16 @@
     </div>
 </template>
 
-<script>
-    export default {
+<script lang="ts">
+    import Vue from "vue";
+
+    export default Vue.extend({
         name: "InfoBox",
         props: {
             heading: String,
             data: String
         },
-    }
+    })
 </script>
 
 <style scoped>

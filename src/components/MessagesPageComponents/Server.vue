@@ -2,19 +2,17 @@
     <div class="server">
         <span
             class="serverText"
-        >
-            {{name.charAt(0)}}
-        </span>
+        >{{name.charAt(0)}}</span>
         <div
             class="restOfIt"
-        >
-            {{name}}
-        </div>
+        >{{name}}</div>
     </div>
 </template>
 
-<script>
-    export default {
+<script lang="ts">
+    import Vue from "vue";
+
+    export default Vue.extend({
         name: "Server",
         props: {
             name: String
@@ -38,14 +36,13 @@
                 return this.expanded === true ? this.name : this.name.charAt(0);
             }
         }
-    }
+    })
 </script>
 
 <style scoped>
     .server {
         width: 80%;
         border-radius: 1000px;
-        /*background-color: #459DBF;*/
         padding-top: 40%;
         padding-bottom: 40%;
         margin: 10%;
@@ -53,10 +50,6 @@
         display: inline-block;
         vertical-align: middle;
         transition: width 0.5s, background-color 0.3s;
-    }
-
-    .server:hover {
-        /*background-color: #67AFCB;*/
     }
 
     .serverText {

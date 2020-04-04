@@ -1,13 +1,28 @@
 <template>
-    <div @click="changeSelection()" class="loginHeader">
-        <div :class="{selected: selected === id}" class="loginOverbar"></div>
+    <div
+        @click="changeSelection()"
+        class="loginHeader"
+    >
+        <div
+            :class="{
+                selected: selected === id
+            }"
+            class="loginOverbar"
+        ></div>
         <h2 class="loginTitle">{{ name }}</h2>
-        <div :class="{selected: selected === id}" class="loginBar"></div>
+        <div
+            :class="{
+                selected: selected === id
+            }"
+            class="loginBar"
+        ></div>
     </div>
 </template>
 
-<script>
-    export default {
+<script lang="ts">
+    import Vue from "vue";
+
+    export default Vue.extend({
         name: "LoginHeader",
         props: {
             name: String,
@@ -19,7 +34,7 @@
                 this.$emit('changeSelected')
             }
         }
-    }
+    })
 </script>
 
 <style scoped>

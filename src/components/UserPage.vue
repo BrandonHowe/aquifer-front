@@ -1,29 +1,44 @@
 <template>
-    <div class="userPage">
-        <div class="userNameDiv">
-            <h1 class="userName">{{ username }}<span class="usernum">#{{ usernum }}</span></h1>
-            <div class="userUnderline"></div>
+    <div
+        class="userPage"
+    >
+        <div
+            class="userNameDiv"
+        >
+            <h1 class="userName">
+                {{ username }}<span class="usernum">#{{ usernum }}</span>
+            </h1>
+            <div
+                class="userUnderline"
+            ></div>
         </div>
-        <div class="infoDiv">
+        <div
+            class="infoDiv"
+        >
             <p>Status: {{ online }}</p>
             <p>User ID: {{ id }}</p>
             <p>Message count: {{ messageCount }}</p>
         </div>
-        <router-link to="/login">
-            <div class="goLogin">
+        <router-link
+            to="/login"
+        >
+            <div
+                class="goLogin"
+            >
                 Logout
             </div>
         </router-link>
     </div>
 </template>
 
-<script>
+<script lang="ts">
     import "../assets/colorVars.css";
-    import {config} from "../assets/config.js";
+    import {config} from "../assets/config";
     import xhr from "xhr";
     import {setWsHeartbeat} from "ws-heartbeat/client";
+    import Vue from 'vue';
 
-    export default {
+    export default Vue.extend({
         name: "UserPage",
         props: {
             username: String,
@@ -38,7 +53,7 @@
             }
         },
         methods: {
-            checkPromise (username, usernum, type) {
+            checkPromise(username, usernum, type) {
                 let url = "";
                 if (type === "status") {
                     url = config.serverUrl + "/userInfo/status/" + username + "/" + usernum;
@@ -115,7 +130,7 @@
                 }
             }
         }
-    }
+    })
 </script>
 
 <style scoped>

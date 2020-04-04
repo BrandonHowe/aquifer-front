@@ -1,31 +1,64 @@
 <template>
-    <div class="msgpopup" id="msgpopup" @click="closeModal('reg')">
-        <div class="msgpopup-content" @click="clickingMain = true">
-            <span class="close" @click="closeModal('x')">&times;</span>
-            <div class="msgpopup-header">
-                <p><span class="message-username">{{user.username}}#{{user.usernum}}</span> <span class="message-date">{{formattedDate}}</span>
+    <div
+        class="msgpopup"
+        id="msgpopup"
+        @click="closeModal('reg')"
+    >
+        <div
+            class="msgpopup-content"
+            @click="clickingMain = true"
+        >
+            <span
+                class="close"
+                @click="closeModal('x')"
+            >&times;</span>
+            <div
+                class="msgpopup-header"
+            >
+                <p>
+                    <span
+                        class="message-username"
+                    >{{user.username}}#{{user.usernum}}</span>
+                    <span
+                        class="message-date"
+                    >{{formattedDate}}</span>
                 </p>
-                <p class="message-content">{{message}}</p>
+                <p
+                    class="message-content"
+                >{{message}}</p>
                 <p>Message ID: {{msgId}}</p>
             </div>
-            <div class="msgpopup-actions">
-                <p v-if="modifiable" class="msgpopup-action" @click="editMessage">Edit message <i
-                    class="cil-energy"></i></p>
-                <p v-if="modifiable" class="msgpopup-action" @click="deleteMessage">Delete message <i
-                    class="cil-energy"></i></p>
+            <div
+                class="msgpopup-actions"
+            >
+                <p
+                    v-if="modifiable"
+                    class="msgpopup-action"
+                    @click="editMessage"
+                >
+                    Edit message<i class="cil-energy"></i>
+                </p>
+                <p
+                    v-if="modifiable"
+                    class="msgpopup-action"
+                    @click="deleteMessage"
+                >
+                    Delete message <i class="cil-energy"></i>
+                </p>
             </div>
         </div>
     </div>
 </template>
 
-<script>
+<script lang="ts">
     import '@coreui/icons';
     import '../../assets/colorVars.css';
     import {config} from '../../assets/config';
     import xhr from "xhr";
     import moment from 'moment';
+    import Vue from "vue";
 
-    export default {
+    export default Vue.extend({
         name: "MsgPopup",
         props: {
             user: Object,
@@ -46,7 +79,7 @@
             checkPower(username, usernum) {
                 return new Promise((resolve) => {
                     xhr({
-                        method: "get",
+                        method: "GET",
                         uri: config.serverUrl + "/userInfo/power/" + username + "/" + usernum,
                         useXDR: true,
                         headers: {
@@ -94,7 +127,7 @@
                 return moment(this.date).calendar();
             },
         }
-    }
+    })
 </script>
 
 <style scoped>

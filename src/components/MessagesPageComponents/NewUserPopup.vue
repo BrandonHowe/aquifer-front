@@ -10,7 +10,9 @@
 </template>
 
 <script>
-    export default {
+    import Vue from 'vue';
+
+    export default Vue.extend({
         name: "NewUserPopup",
         props: {
             usernum: String,
@@ -28,42 +30,31 @@
                 }
             }
         }
-    }
+    })
 </script>
 
 <style scoped>
     .newUserPopup {
-        /* display: none; */
-        /* Hidden by default */
         position: fixed;
-        /* Stay in place */
         z-index: 2;
-        /* Sit on top */
         left: 0;
         top: 0;
         width: 100%;
-        /* Full width */
         height: 100vh;
-        /* Full height */
         overflow: auto;
-        /* Enable scroll if needed */
         background-color: rgb(0,0,0);
-        /* Fallback color */
         background-color: rgba(0, 0, 0, 0.7);
         text-align: left;
         color: #0B3241;
-        /* Black w/ opacity */
     }
     .newUserPopup-content {
         background-color: var(--aquifer-medium-4);
         margin: 10% auto;
-        /* 15% from the top and centered */
         height: 40%;
         padding: 20px;
         border: var(--aquifer-light-1) 5px solid;
         border-radius: 10px;
         width: 80%;
-        /* Could be more or less, depending on screen size */
     }
     .text {
         font-family: Arial, sans-serif;

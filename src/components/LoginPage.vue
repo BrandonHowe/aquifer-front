@@ -1,31 +1,84 @@
 <template>
     <div class="loginPage">
         <h1 class="welcomeMsg">Welcome to Aquifer</h1>
-        <div class="loginBox">
-            <div class="loginHeaders">
-                <LoginHeader :id="0" :selected="selectedNum" @changeSelected="changeSelected('login', 0)" name="Login"></LoginHeader>
-                <LoginHeader :id="1" :selected="selectedNum" @changeSelected="changeSelected('create', 1)" name="Create"></LoginHeader>
-                <LoginHeader :id="2" :selected="selectedNum" @changeSelected="changeSelected('logout', 2)" name="Logout"></LoginHeader>
+        <div
+            class="loginBox"
+        >
+            <div
+                class="loginHeaders"
+            >
+                <LoginHeader
+                    :id="0"
+                    :selected="selectedNum"
+                    @changeSelected="changeSelected('login', 0)"
+                    name="Login"
+                ></LoginHeader>
+                <LoginHeader
+                    :id="1"
+                    :selected="selectedNum"
+                    @changeSelected="changeSelected('create', 1)"
+                    name="Create"
+                ></LoginHeader>
+                <LoginHeader
+                    :id="2"
+                    :selected="selectedNum"
+                    @changeSelected="changeSelected('logout', 2)"
+                    name="Logout"
+                ></LoginHeader>
             </div>
             <div class="usernameInputs">
-                <input v-if="selected !== 'logout'" :style="[selected === 'login' ? {'width': '60%'} : {'width': '90%'}]" class="loginUsername" v-model="username" type="text" placeholder="Username..."/>
-                <input v-if="selected === 'login'" class="loginUsernum" v-model="usernum" type="text" placeholder="Usernum..."/>
+                <input
+                    v-if="selected !== 'logout'"
+                    :style="[selected === 'login' ? {'width': '60%'} : {'width': '90%'}]"
+                    class="loginUsername"
+                    v-model="username" type="text"
+                    placeholder="Username..."
+                />
+                <input
+                    v-if="selected === 'login'"
+                    class="loginUsernum"
+                    v-model="usernum"
+                    type="text"
+                    placeholder="Usernum..."
+                />
             </div>
-            <input v-if="selected !== 'logout'" class="loginInput" v-model="password" type="password" placeholder="Password..."/>
-            <div v-if="selected === 'login'"  class="loginSubmit" v-on:click="loginUser">Log in</div>
-            <div v-if="selected === 'create'" class="loginSubmit" v-on:click="createUser">Create</div>
-            <div v-if="selected === 'logout'" class="loginSubmit" v-on:click="logout">Logout</div>
-            <div class="xhrstatus">{{xhrstatus}}</div>
+            <input
+                v-if="selected !== 'logout'"
+                class="loginInput"
+                v-model="password"
+                type="password"
+                placeholder="Password..."
+            />
+            <div
+                v-if="selected === 'login'"
+                class="loginSubmit"
+                v-on:click="loginUser"
+            >Log in</div>
+            <div
+                v-if="selected === 'create'"
+                class="loginSubmit"
+                v-on:click="createUser"
+            >Create</div>
+            <div
+                v-if="selected === 'logout'"
+                class="loginSubmit"
+                v-on:click="logout"
+            >Logout</div>
+            <div
+                class="xhrstatus"
+            >{{xhrstatus}}</div>
         </div>
     </div>
 </template>
 
-<script>
+<script lang="ts">
     import '../assets/colorVars.css';
-    import {config} from "../assets/config.js";
+    import {config} from "../assets/config";
     import xhr from "xhr";
     import LoginHeader from "./LoginPageComponents/LoginHeader.vue";
-    export default {
+    import Vue from "vue";
+
+    export default Vue.extend({
         name: "LoginPage",
         components: {
             LoginHeader
@@ -48,7 +101,7 @@
             loginUser () {
                 const self = this;
                 xhr({
-                    method: "post",
+                    method: "POST",
                     body: JSON.stringify({
                         username: this.username,
                         usernum: this.usernum,
@@ -76,7 +129,7 @@
             createUser () {
                 const self = this;
                 xhr({
-                    method: "post",
+                    method: "POST",
                     body: JSON.stringify({
                         username: this.username,
                         password: this.password
@@ -103,7 +156,7 @@
             logout () {
                 const self = this;
                 xhr({
-                    method: "post",
+                    method: "POST",
                     body: JSON.stringify({
                         seshkey: localStorage.getItem("seshkey"),
                     }),
@@ -123,7 +176,7 @@
                 });
             }
         }
-    }
+    })
 </script>
 
 <style scoped>

@@ -9,14 +9,16 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
     import '../../assets/colorVars.css';
-    export default {
+    import Vue from "vue";
+
+    export default Vue.extend({
         name: "User",
         props: {
             user: Object,
         }
-    }
+    })
 </script>
 
 <style scoped>
