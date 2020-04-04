@@ -105,13 +105,11 @@
     .serverList {
         grid-column: 1;
         grid-row: 1 / 21;
-        /* background-color: #044289; */
         background-color: var(--aquifer-dark-2);
     }
     .addServer {
         width: 80%;
         border-radius: 1000px;
-        /*background-color: #459DBF;*/
         padding-top: 40%;
         padding-bottom: 40%;
         margin: 10%;

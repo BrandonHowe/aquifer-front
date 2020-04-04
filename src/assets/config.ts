@@ -12,6 +12,7 @@ const config = {
 // const mode = "dev"; // Use this for development
 const mode = "prod"; // Use this for production, default
 
+// @ts-ignore
 if (mode === "dev") {
     config.wsUrl = wsDev;
     config.serverUrl = serverDev;

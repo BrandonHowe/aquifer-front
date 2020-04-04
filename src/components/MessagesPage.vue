@@ -297,7 +297,6 @@
             chatmessage() {
                 if (this.currentUser.currentChannel > 0) {
                     if (this.editing === false) {
-                        // Send the "pingServer" event to the server.
                         const message = this.sendMessageVal;
                         this.sendMessageVal = "";
                         const newMessage = {
@@ -467,7 +466,6 @@
     }
 
     #messages {
-        /* background: #9AC1EA; */
         grid-column: 5 / 18;
         grid-row: 1 / 20;
         border: solid black;
