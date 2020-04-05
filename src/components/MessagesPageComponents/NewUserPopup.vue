@@ -33,7 +33,7 @@
     })
 </script>
 
-<style scoped>
+<style scoped lang="scss">
     .newUserPopup {
         position: fixed;
         z-index: 2;

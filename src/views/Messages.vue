@@ -1,13 +1,17 @@
 <template>
-    <MessagesPage :userInput="currentUser" v-if="loaded"></MessagesPage>
+    <MessagesPage
+        :userInput="currentUser"
+        v-if="loaded"
+    ></MessagesPage>
 </template>
 
-<script>
+<script lang="ts">
     import MessagesPage from "../components/MessagesPage.vue";
     import xhr from "xhr";
     import {config} from '../assets/config';
+    import Vue from 'vue';
 
-    export default {
+    export default Vue.extend({
         name: "Messages",
         components: {
             MessagesPage
@@ -23,7 +27,7 @@
             const self = this;
             if (localStorage.getItem("seshkey")) {
                 xhr({
-                    method: "post",
+                    method: "POST",
                     body: JSON.stringify({
                         seshkey: localStorage.getItem("seshkey")
                     }),
@@ -48,9 +52,9 @@
                 this.$router.replace("/login");
             }
         }
-    }
+    })
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 
 </style>

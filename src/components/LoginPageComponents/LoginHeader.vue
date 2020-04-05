@@ -37,7 +37,7 @@
     })
 </script>
 
-<style scoped>
+<style scoped lang="scss">
     .loginBar {
         background-color: var(--aquifer-light-3);
         height: 4px;

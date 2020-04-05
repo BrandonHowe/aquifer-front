@@ -33,7 +33,7 @@
 
 <script lang="ts">
     import '@coreui/icons';
-    import '../../assets/colorVars.css';
+    import '../../assets/colorVars.scss';
     import Vue from "vue";
 
     export default Vue.extend({
@@ -59,7 +59,7 @@
     })
 </script>
 
-<style scoped>
+<style scoped lang="scss">
     .channelPopup {
         position: fixed;
         z-index: 2;

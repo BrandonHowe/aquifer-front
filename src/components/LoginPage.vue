@@ -72,7 +72,7 @@
 </template>
 
 <script lang="ts">
-    import '../assets/colorVars.css';
+    import '../assets/colorVars.scss';
     import {config} from "../assets/config";
     import xhr from "xhr";
     import LoginHeader from "./LoginPageComponents/LoginHeader.vue";
@@ -179,7 +179,7 @@
     })
 </script>
 
-<style scoped>
+<style scoped lang="scss">
     @import url('https://fonts.googleapis.com/css?family=Montserrat&display=swap');
     .loginPage {
         background-image: linear-gradient(160deg, var(--aquifer-medium-3) 49%, var(--aquifer-medium-2) 51%);

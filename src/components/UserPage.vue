@@ -32,7 +32,7 @@
 </template>
 
 <script lang="ts">
-    import "../assets/colorVars.css";
+    import "../assets/colorVars.scss";
     import {config} from "../assets/config";
     import xhr from "xhr";
     import {setWsHeartbeat} from "ws-heartbeat/client";
@@ -64,7 +64,7 @@
                 }
                 return new Promise((resolve) => {
                     xhr({
-                        method: "get",
+                        method: "GET",
                         uri: url,
                         useXDR: true,
                         headers: {
@@ -133,7 +133,7 @@
     })
 </script>
 
-<style scoped>
+<style scoped lang="scss">
     @import url('https://fonts.googleapis.com/css?family=Montserrat');
 
     .userPage {

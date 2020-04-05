@@ -39,7 +39,7 @@
     })
 </script>
 
-<style scoped>
+<style scoped lang="scss">
     .server {
         width: 80%;
         border-radius: 1000px;

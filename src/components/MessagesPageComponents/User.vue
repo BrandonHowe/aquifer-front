@@ -10,7 +10,7 @@
 </template>
 
 <script lang="ts">
-    import '../../assets/colorVars.css';
+    import '../../assets/colorVars.scss';
     import Vue from "vue";
 
     export default Vue.extend({
@@ -21,7 +21,7 @@
     })
 </script>
 
-<style scoped>
+<style scoped lang="scss">
     .user {
         width: 90%;
         margin: -10px 0 -10px 0;

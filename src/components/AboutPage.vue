@@ -27,7 +27,7 @@
 </template>
 
 <script lang="ts">
-    import "../assets/colorVars.css";
+    import "../assets/colorVars.scss";
     import Vue from "vue";
 
     export default Vue.extend({
@@ -38,7 +38,7 @@
     })
 </script>
 
-<style scoped>
+<style scoped lang="scss">
     .infoBoxes {
         display: flex;
         flex-wrap: wrap;

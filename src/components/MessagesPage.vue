@@ -102,7 +102,7 @@
 
     import {config} from "../assets/config";
 
-    import "../assets/colorVars.css";
+    import "../assets/colorVars.scss";
 
     import { setWsHeartbeat } from "ws-heartbeat/client";
     import xhr from "xhr";
@@ -436,7 +436,7 @@
     })
 </script>
 
-<style scoped>
+<style scoped lang="scss">
     #messagesPage {
         grid-auto-columns: 5%;
         grid-auto-rows: 5%;

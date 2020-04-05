@@ -101,7 +101,7 @@
     })
 </script>
 
-<style scoped>
+<style scoped lang="scss">
     .serverList {
         grid-column: 1;
         grid-row: 1 / 21;

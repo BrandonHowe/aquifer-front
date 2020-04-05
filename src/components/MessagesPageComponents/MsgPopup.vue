@@ -52,7 +52,7 @@
 
 <script lang="ts">
     import '@coreui/icons';
-    import '../../assets/colorVars.css';
+    import '../../assets/colorVars.scss';
     import {config} from '../../assets/config';
     import xhr from "xhr";
     import moment from 'moment';
@@ -130,7 +130,7 @@
     })
 </script>
 
-<style scoped>
+<style scoped lang="scss">
     .msgpopup {
         position: fixed;
         z-index: 2;

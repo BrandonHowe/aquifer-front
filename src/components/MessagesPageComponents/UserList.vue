@@ -12,7 +12,7 @@
 
 <script lang="ts">
     import User from './User.vue';
-    import '../../assets/colorVars.css';
+    import '../../assets/colorVars.scss';
     import Vue from "vue";
 
     export default Vue.extend({
@@ -26,7 +26,7 @@
     })
 </script>
 
-<style scoped>
+<style scoped lang="scss">
     .userList {
         background: var(--aquifer-medium-1);
         border: solid black;

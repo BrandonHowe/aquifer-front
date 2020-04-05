@@ -24,7 +24,7 @@
 </template>
 
 <script lang="ts">
-    import '../../assets/colorVars.css';
+    import '../../assets/colorVars.scss';
     import moment from 'moment';
     import LinkPrevue from 'link-prevue';
     import Vue from "vue";
@@ -79,7 +79,7 @@
     })
 </script>
 
-<style scoped>
+<style scoped lang="scss">
     .message {
         width: 94%;
         background-color: var(--aquifer-medium-2);

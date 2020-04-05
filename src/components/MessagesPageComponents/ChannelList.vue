@@ -22,7 +22,7 @@
 
 <script lang="ts">
     import Channel from './Channel.vue';
-    import '../../assets/colorVars.css';
+    import '../../assets/colorVars.scss';
     import Vue from 'vue';
 
     export default Vue.extend({
@@ -75,7 +75,7 @@
     })
 </script>
 
-<style scoped>
+<style scoped lang="scss">
     .channelList {
         grid-column: 2 / 5;
         grid-row: 1 / 20;

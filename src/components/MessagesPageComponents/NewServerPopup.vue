@@ -36,7 +36,7 @@
 
 <script lang="ts">
     import '@coreui/icons';
-    import '../../assets/colorVars.css';
+    import '../../assets/colorVars.scss';
     import {config} from "../../assets/config";
     import Vue from 'vue';
 
@@ -66,7 +66,7 @@
     })
 </script>
 
-<style scoped>
+<style scoped lang="scss">
     .newServerPopup {
         position: fixed;
         z-index: 2;

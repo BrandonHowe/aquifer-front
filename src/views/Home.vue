@@ -50,7 +50,7 @@
     })
 </script>
 
-<style scoped>
+<style scoped lang="scss">
     @import url('https://fonts.googleapis.com/css?family=Montserrat');
 
     .home {
