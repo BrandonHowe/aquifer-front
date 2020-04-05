@@ -79,8 +79,8 @@
         border-radius: 1000px;
         z-index: 1;
         display: none;
-        background-color: #0B3241;
-        color: #78A4B5;
+        background-color: var(--aquifer-dark-3);
+        color: var(--aquifer-text-light-3);
         width: max-content;
         padding: 10px;
         opacity: 0;

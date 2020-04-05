@@ -56,8 +56,8 @@
     .home {
         width: 100%;
         min-height: 100vh;
-        background-color: #67AFCB;
-        color: #0B3241;
+        background-color: var(--aquifer-medium-1);
+        color: var(--aquifer-dark-2);
     }
 
     .heading {
@@ -93,11 +93,11 @@
 
     .linkButton {
         width: 35%;
-        background-color: #3782A0;
+        background-color: var(--aquifer-dark-1);
         display: inline-block;
         margin: 5% 5% 5% 5%;
         height: 80px;
-        color: #8fa6b5;
+        color: var(--aquifer-text-light-2);
         text-decoration: none;
         border-radius: 10px;
         line-height: 80px;
@@ -111,8 +111,8 @@
     }
 
     .messagesButton {
-        background-color: #cdf0ff;
-        color: #1e2d50;
+        background-color: var(--aquifer-light-4);
+        color: var(--aquifer-text-dark-3);
     }
 
     .routerLink {
@@ -126,10 +126,10 @@
         top: 9%;
         right: 7%;
         width: 10%;
-        border: 3px #2d6880 solid;
+        border: 3px var(--aquifer-medium-5) solid;
         height: 50px;
-        background-color: #3B8BAB;
-        color: #0B3241;
+        background-color: var(--aquifer-medium-2);
+        color: var(--aquifer-text-dark-2);
         text-decoration: none;
         border-radius: 30px;
         line-height: 50px;
@@ -138,8 +138,8 @@
         transition: transform 0.5s;
     }
     .aboutButton {
-        color: #9dbdcc;
-        background-color: #145266;
+        color: var(--aquifer-text-light-1);
+        background-color: var(--aquifer-dark-4);
     }
     .openbutton:hover {
         transform: translateY(5px);

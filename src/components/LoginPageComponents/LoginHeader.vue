@@ -39,7 +39,7 @@
 
 <style scoped>
     .loginBar {
-        background-color: #78A4B5;
+        background-color: var(--aquifer-light-3);
         height: 4px;
         border-radius: 10px;
         margin-top: 2px;
@@ -49,7 +49,7 @@
         width: 0;
     }
     .loginOverbar {
-        background-color: #78A4B5;
+        background-color: var(--aquifer-light-3);
         height: 4px;
         border-radius: 10px;
         margin-top: 5px;
@@ -65,17 +65,17 @@
         margin-right: auto;
     }
     .loginHeader:hover > .loginBar {
-        background-color: #459DBF;
+        background-color: var(--aquifer-medium-2);
         padding-left: 50%;
         padding-right: 50%;
     }
     .loginHeader:hover > .loginOverbar {
-        background-color: #459DBF;
+        background-color: var(--aquifer-medium-2);
         padding-left: 50%;
         padding-right: 50%;
     }
     .selected {
-        background-color: #459DBF;
+        background-color: var(--aquifer-medium-2);
         padding-left: 50%;
         padding-right: 50%;
     }

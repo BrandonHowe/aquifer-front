@@ -183,8 +183,8 @@
             }
             const self = this;
             setWsHeartbeat(this.socket, '{"kind":"ping"}', {
-                pingTimeout: 60000, // in 60 seconds, if no message accepted from server, close the connection.
-                pingInterval: 25000, // every 25 seconds, send a ping message to the server.
+                pingTimeout: 60000,
+                pingInterval: 25000,
             });
             this.socket.onopen = () => {
                 self.socketConnected = true;
@@ -299,31 +299,27 @@
                     if (this.editing === false) {
                         const message = this.sendMessageVal;
                         this.sendMessageVal = "";
-                        const newMessage = {
+                        this.sendSocket("message", {
                             user: this.currentUser,
                             message: message,
                             channel: this.currentUser.currentChannel,
-                        };
-                        this.sendSocket("message", newMessage);
+                        })
                     } else {
-                        const newMessage = {
-                            msg: this.sendMessageVal,
-                            id: this.editingId,
-                        };
                         this.editing = false;
                         this.sendMessageVal = "";
-                        this.sendSocket("editMessage", newMessage);
+                        this.sendSocket("editMessage", {
+                            msg: this.sendMessageVal,
+                            id: this.editingId,
+                        });
                     }
                 }
             },
             changeChannel(currentChannel) {
                 Vue.set(this.currentUser, "currentChannel", currentChannel);
-                // this.sendSocket("changedSelection", currentChannel);
                 this.sendSocket("queryMessages", currentChannel);
             },
             changeServer(currentServer) {
                 Vue.set(this.currentUser, "currentServer", currentServer);
-                // this.sendSocket("changedServer", currentServer);
                 this.sendSocket("queryChannels", currentServer);
                 this.changeChannel(0);
             },
