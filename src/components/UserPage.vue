@@ -32,7 +32,7 @@
 </template>
 
 <script lang="ts">
-    import "../assets/colorVars.scss";
+    import "../assets/colorVars.css";
     import {config} from "../assets/config";
     import xhr from "xhr";
     import {setWsHeartbeat} from "ws-heartbeat/client";

@@ -9,10 +9,9 @@
     </div>
 </template>
 
-<script lang="ts">
-    import Vue from "vue";
+<script>
 
-    export default Vue.extend({
+    export default {
         name: "Server",
         props: {
             name: String
@@ -36,7 +35,7 @@
                 return this.expanded === true ? this.name : this.name.charAt(0);
             }
         }
-    })
+    }
 </script>
 
 <style scoped lang="scss">

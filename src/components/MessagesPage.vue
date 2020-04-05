@@ -93,7 +93,7 @@
     </div>
 </template>
 
-<script lang="ts">
+<script>
     /* eslint-disable */
 
     import Vue from 'vue';
@@ -102,12 +102,12 @@
 
     import {config} from "../assets/config";
 
-    import "../assets/colorVars.scss";
+    import "../assets/colorVars.css";
 
     import { setWsHeartbeat } from "ws-heartbeat/client";
     import xhr from "xhr";
 
-    export default Vue.extend({
+    export default {
         name: 'MessagesPage',
         components: {
             ChannelPopup: () => import("./MessagesPageComponents/ChannelPopup.vue"),
@@ -269,7 +269,7 @@
             }
         },
         methods: {
-            checkPower(username: string, usernum: number) {
+            checkPower(username, usernum) {
                 return new Promise((resolve) => {
                     xhr({
                         method: "GET",
@@ -433,7 +433,7 @@
                 this.socket.send(JSON.stringify([category, seshkey, data]));
             }
         }
-    })
+    }
 </script>
 
 <style scoped lang="scss">

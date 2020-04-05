@@ -10,12 +10,11 @@
     </div>
 </template>
 
-<script lang="ts">
+<script>
     import User from './User.vue';
-    import '../../assets/colorVars.scss';
-    import Vue from "vue";
+    import '../../assets/colorVars.css';
 
-    export default Vue.extend({
+    export default {
         name: "UserList",
         components: {
             User
@@ -23,7 +22,7 @@
         props: {
             userList: Object
         }
-    })
+    }
 </script>
 
 <style scoped lang="scss">

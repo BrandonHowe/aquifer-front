@@ -20,12 +20,11 @@
     </div>
 </template>
 
-<script lang="ts">
+<script>
     import Channel from './Channel.vue';
-    import '../../assets/colorVars.scss';
-    import Vue from 'vue';
+    import '../../assets/colorVars.css';
 
-    export default Vue.extend({
+    export default {
         name: "ChannelList",
         components: {
             Channel
@@ -46,6 +45,7 @@
         },
         methods: {
             changeSelection(channelId) {
+                console.log(this.channels);
                 this.currentlySelected = this.channels.findIndex(l => l.id === channelId);
                 this.currentlySelectedIdx = channelId;
                 this.$emit("changedSelection", channelId);
@@ -72,7 +72,7 @@
                 this.$emit("openNewChannelModal");
             }
         }
-    })
+    }
 </script>
 
 <style scoped lang="scss">

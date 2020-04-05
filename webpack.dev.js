@@ -7,6 +7,11 @@ module.exports = merge(baseConfig, {
         path: path.resolve(__dirname, 'dist'),
         filename: 'aquifer.bundle.dev.js'
     },
+    devServer: {
+        contentBase: path.join(__dirname, 'dist'),
+        compress: true,
+        port: 2400
+    },
     mode: "development",
     watch: true,
 });

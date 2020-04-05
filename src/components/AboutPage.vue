@@ -27,7 +27,7 @@
 </template>
 
 <script lang="ts">
-    import "../assets/colorVars.scss";
+    import "../assets/colorVars.css";
     import Vue from "vue";
 
     export default Vue.extend({

@@ -18,7 +18,7 @@ export default new Router({
         {
             path: "/app",
             name: "Messages",
-            component: Messages
+            component: Messages,
         },
         {
             path: "/about",

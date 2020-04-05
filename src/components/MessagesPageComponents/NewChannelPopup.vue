@@ -33,13 +33,12 @@
     </div>
 </template>
 
-<script lang="ts">
+<script>
     import '@coreui/icons';
-    import '../../assets/colorVars.scss';
+    import '../../assets/colorVars.css';
     import {config} from "../../assets/config";
-    import Vue from "vue";
 
-    export default Vue.extend({
+    export default {
         name: "NewChannelPopup",
         props: {
             currentServer: Number,
@@ -62,7 +61,7 @@
                 }
             }
         }
-    })
+    }
 </script>
 
 <style scoped lang="scss">

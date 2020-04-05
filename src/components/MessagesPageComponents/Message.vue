@@ -23,13 +23,12 @@
     </div>
 </template>
 
-<script lang="ts">
-    import '../../assets/colorVars.scss';
+<script>
+    import '../../assets/colorVars.css';
     import moment from 'moment';
     import LinkPrevue from 'link-prevue';
-    import Vue from "vue";
 
-    export default Vue.extend({
+    export default {
         name: "Message",
         components: {
             LinkPrevue
@@ -76,7 +75,7 @@
                 });
             }
         }
-    })
+    }
 </script>
 
 <style scoped lang="scss">

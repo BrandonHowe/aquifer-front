@@ -4,16 +4,15 @@
     </div>
 </template>
 
-<script lang="ts">
-    import '../../assets/colorVars.scss';
-    import Vue from 'vue';
+<script>
+    import '../../assets/colorVars.css';
 
-    export default Vue.extend({
+    export default {
         name: "Channel",
         props: {
             channelName: String
         }
-    })
+    }
 </script>
 
 <style scoped lang="scss">

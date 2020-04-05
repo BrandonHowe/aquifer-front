@@ -31,12 +31,11 @@
     </div>
 </template>
 
-<script lang="ts">
+<script>
     import '@coreui/icons';
-    import '../../assets/colorVars.scss';
-    import Vue from "vue";
+    import '../../assets/colorVars.css';
 
-    export default Vue.extend({
+    export default {
         name: "ChannelPopup",
         props: {
             channel: Object
@@ -56,7 +55,7 @@
                 }
             }
         }
-    })
+    }
 </script>
 
 <style scoped lang="scss">

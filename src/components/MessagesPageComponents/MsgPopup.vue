@@ -50,15 +50,14 @@
     </div>
 </template>
 
-<script lang="ts">
+<script>
     import '@coreui/icons';
-    import '../../assets/colorVars.scss';
+    import '../../assets/colorVars.css';
     import {config} from '../../assets/config';
     import xhr from "xhr";
     import moment from 'moment';
-    import Vue from "vue";
 
-    export default Vue.extend({
+    export default {
         name: "MsgPopup",
         props: {
             user: Object,
@@ -127,7 +126,7 @@
                 return moment(this.date).calendar();
             },
         }
-    })
+    }
 </script>
 
 <style scoped lang="scss">

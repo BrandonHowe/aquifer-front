@@ -33,7 +33,7 @@
 
 <script lang="ts">
     import '@coreui/icons';
-    import '../../assets/colorVars.scss';
+    import '../../assets/colorVars.css';
     import Vue from "vue";
 
     export default Vue.extend({

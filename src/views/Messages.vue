@@ -1,8 +1,9 @@
 <template>
-    <MessagesPage
-        :userInput="currentUser"
-        v-if="loaded"
-    ></MessagesPage>
+    <div class="messages">
+        <MessagesPage
+            :userInput="currentUser"
+        ></MessagesPage>
+    </div>
 </template>
 
 <script lang="ts">
@@ -10,19 +11,17 @@
     import xhr from "xhr";
     import {config} from '../assets/config';
     import Vue from 'vue';
+    import Component from 'vue-class-component';
 
-    export default Vue.extend({
-        name: "Messages",
+    @Component({
         components: {
-            MessagesPage
-        },
-        data() {
-            return {
-                authenticated: false,
-                currentUser: {},
-                loaded: false,
-            }
-        },
+            MessagesPage: () => Promise.resolve(MessagesPage)
+        }
+    })
+    export default class Messages extends Vue {
+        loaded = false;
+        currentUser = {};
+
         mounted() {
             const self = this;
             if (localStorage.getItem("seshkey")) {
@@ -52,7 +51,7 @@
                 this.$router.replace("/login");
             }
         }
-    })
+    }
 </script>
 
 <style scoped lang="scss">

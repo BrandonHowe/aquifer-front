@@ -21,20 +21,19 @@
     </div>
 </template>
 
-<script lang="ts">
+<script>
     import Server from './Server.vue';
     import xhr from "xhr";
     import {config} from "../../assets/config";
-    import Vue from "vue";
 
-    export default Vue.extend({
+    export default {
         name: "ServerList",
         components: {
             Server
         },
         props: {
             servers: Object,
-            user: Object,
+            user: Object
         },
         data() {
             return {
@@ -43,14 +42,14 @@
                     num: 0,
                     server: 0,
                 },
-                userPower: "",
+                userPower: "member",
             }
         },
         async mounted() {
             this.userPower = await this.checkPower(this.user.username, this.user.userNum);
         },
         methods: {
-            checkPower(username: string, usernum: number) {
+            checkPower(username, usernum) {
                 return new Promise((resolve) => {
                     xhr({
                         method: "GET",
@@ -98,7 +97,7 @@
                 this.$emit("openNewServerModal");
             }
         }
-    })
+    }
 </script>
 
 <style scoped lang="scss">
