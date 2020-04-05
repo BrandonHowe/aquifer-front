@@ -28,14 +28,14 @@
 
 <script lang="ts">
     import "../assets/colorVars.css";
-    import Vue from "vue";
+    import { Component, Vue } from 'vue-property-decorator';
 
-    export default Vue.extend({
-        name: "AboutPage",
+    @Component({
         components: {
             InfoBox: () => import('./AboutPageComponents/InfoBox.vue')
         }
     })
+    export default class AboutPage extends Vue {}
 </script>
 
 <style scoped lang="scss">

@@ -6,19 +6,12 @@
 
 <script>
     /* eslint-disable */
-
     import Vue from 'vue';
     import VueRouter from 'vue-router';
-
     Vue.use(VueRouter);
 
-    import MessagesPage from './components/MessagesPage.vue';
-
     export default {
-        name: 'App',
-        components: {
-            MessagesPage
-        },
+        name: 'App'
     }
 </script>
 
@@ -29,7 +22,6 @@
         overflow-x: hidden;
         position: absolute;
     }
-
     #app {
         font-family: Avenir, Helvetica, Arial, sans-serif;
         -webkit-font-smoothing: antialiased;

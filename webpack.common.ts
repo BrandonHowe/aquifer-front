@@ -1,4 +1,6 @@
+const path = require("path");
 const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
+const VueLoaderPlugin = require('vue-loader/lib/plugin');
 
 module.exports = {
     entry: "./src/main.ts",
@@ -37,10 +39,12 @@ module.exports = {
         alias: {
             'vue$': 'vue/dist/vue.esm.js',
             "request$": "xhr",
+            '@': path.resolve(__dirname, './src'),
         },
         extensions: [ '.tsx', '.ts', '.js'],
     },
     plugins: [
-        new FaviconsWebpackPlugin('./static/favicon-32x32.png')
+        new FaviconsWebpackPlugin('./static/favicon-32x32.png'),
+        new VueLoaderPlugin()
     ]
 };

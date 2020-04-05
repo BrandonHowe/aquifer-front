@@ -93,21 +93,21 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
     /* eslint-disable */
 
     import Vue from 'vue';
     import moment from 'moment';
     import * as randomWords from "random-words";
 
-    import {config} from "../assets/config";
+    import {config} from "@/assets/config";
 
     import "../assets/colorVars.css";
 
     import { setWsHeartbeat } from "ws-heartbeat/client";
     import xhr from "xhr";
 
-    export default {
+    export default Vue.extend({
         name: 'MessagesPage',
         components: {
             ChannelPopup: () => import("./MessagesPageComponents/ChannelPopup.vue"),
@@ -433,7 +433,7 @@
                 this.socket.send(JSON.stringify([category, seshkey, data]));
             }
         }
-    }
+    })
 </script>
 
 <style scoped lang="scss">

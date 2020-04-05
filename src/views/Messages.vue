@@ -2,6 +2,7 @@
     <div class="messages">
         <MessagesPage
             :userInput="currentUser"
+            v-if="loaded"
         ></MessagesPage>
     </div>
 </template>
@@ -9,7 +10,7 @@
 <script lang="ts">
     import MessagesPage from "../components/MessagesPage.vue";
     import xhr from "xhr";
-    import {config} from '../assets/config';
+    import {config} from '@/assets/config';
     import Vue from 'vue';
     import Component from 'vue-class-component';
 

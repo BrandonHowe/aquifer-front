@@ -148,7 +148,7 @@
                     self.xhrstatus = body;
                     if (JSON.parse(body).status === "Success") {
                         self.usernum = JSON.parse(body).usernum;
-                        localStorage.setItem("newUser", true);
+                        localStorage.setItem("newUser", "true");
                         this.loginUser();
                     }
                 });
