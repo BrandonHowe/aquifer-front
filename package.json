@@ -8,7 +8,7 @@
         "serve": "vue-cli-service serve",
         "build": "vue-cli-service build",
         "lint": "vue-cli-service lint",
-        "dev": "webpack --config webpack.dev.ts",
+        "dev": "webpack-dev-server --config webpack.dev.ts",
         "prod": "webpack --config webpack.prod.ts"
     },
     "main": "babel.config.js",
